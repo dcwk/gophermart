@@ -1,5 +1,5 @@
-<iframe width="768" height="432" src="https://miro.com/app/live-embed/uXjVKJX4m7E=/?moveToViewport=-2102,-707,5215,2081&embedId=588455387484" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
-
+![img.png](img.png)
+https://miro.com/app/board/uXjVKJX4m7E=/?share_link_id=670000264537
 # go-musthave-diploma-tpl
 
 Шаблон репозитория для индивидуального дипломного проекта курса «Go-разработчик»
