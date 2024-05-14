@@ -1,27 +1,29 @@
 ![img.png](img.png)
 https://miro.com/app/board/uXjVKJX4m7E=/?share_link_id=670000264537
-# go-musthave-diploma-tpl
 
-Шаблон репозитория для индивидуального дипломного проекта курса «Go-разработчик»
-
-# Начало работы
-
-1. Склонируйте репозиторий в любую подходящую директорию на вашем компьютере.
-2. В корне репозитория выполните команду `go mod init <name>` (где `<name>` — адрес вашего репозитория на GitHub без
-   префикса `https://`) для создания модуля
-
-# Обновление шаблона
-
-Чтобы иметь возможность получать обновления автотестов и других частей шаблона, выполните команду:
-
+```mermaid
+sequenceDiagram
+    participant Client
+    participant LoyaltySystem
+    participant DB
+    participant ScoringSystem
+    
+    Client->>LoyaltySystem: Загрузить заказ
+    rect rgb(255, 255, 224)
+       loop Пока не получим данные со статусом PROCESSED, INVALID, либо что заказ не зарегистрирован 
+          LoyaltySystem->>ScoringSystem: Делаем запрос по номеру заказа
+          activate ScoringSystem
+          alt Заказ найден
+              rect rgb(0,204,0)
+                  ScoringSystem->>LoyaltySystem: 200 возвращаем данные по заказу 
+              end
+          else Заказ не найден
+              rect rgb(204,0,0)
+                  ScoringSystem->>LoyaltySystem: 204 заказ не зарегистрирован
+              end
+          end
+          deactivate ScoringSystem
+       end
+    end
+    LoyaltySystem->>Client: Возвращаем результат операции
 ```
-git remote add -m master template https://github.com/yandex-praktikum/go-musthave-diploma-tpl.git
-```
-
-Для обновления кода автотестов выполните команду:
-
-```
-git fetch template && git checkout template/master .github
-```
-
-Затем добавьте полученные изменения в свой репозиторий.
