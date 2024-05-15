@@ -2,6 +2,43 @@
 https://miro.com/app/board/uXjVKJX4m7E=/?share_link_id=670000264537
 
 ```mermaid
+erDiagram
+User {
+    int id PK
+    string login
+    string password
+}
+
+UserBalance {
+    int userId PK
+    int accrual
+    int withdrawal
+}
+
+Order {
+    int id PK
+    string number
+    timestamp createdAt 
+}
+
+Accrual {
+    int id PK
+    int orderId FK
+    string status
+    int value
+    timestamp createdAt
+    timestamp updatedAt
+}
+
+Withdrawal {
+    int id PK
+    int orderId FK
+    int value
+    timestamp createdAt
+}
+```
+
+```mermaid
 sequenceDiagram
     participant Client
     participant LoyaltySystem
