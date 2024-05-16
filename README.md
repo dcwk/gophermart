@@ -31,7 +31,7 @@ Order {
 
 Accrual {
     int orderId PK
-    string status
+    enum status
     double value
     timestamp createdAt
     timestamp updatedAt
@@ -54,10 +54,11 @@ sequenceDiagram
     
     Client->>LoyaltySystem: Загрузить заказ
     activate LoyaltySystem
+    Note over LoyaltySystem,DB: Проверить существование пользователя
     LoyaltySystem->>DB: Открываем транзакцию. Создаем запись в таблице Order и в таблице Accrual в статусе Processing. 
     deactivate LoyaltySystem
        loop Пока не получим данные со статусом PROCESSED, INVALID, либо что заказ не зарегистрирован 
-          LoyaltySystem->>ScoringSystem: Делаем запрос по номеру заказа
+          LoyaltySystem->>ScoringSystem: Асинхронно делаем запрос по номеру заказа
           activate ScoringSystem
           alt Заказ найден
                   ScoringSystem->>LoyaltySystem: 200 возвращаем данные по заказу 
@@ -83,6 +84,7 @@ sequenceDiagram
     participant DB
     
     Client->>LoyaltySystem: Запрос на вывод баллов
+    Note over LoyaltySystem,DB: Проверить существование пользователя + проверить что заказ принадлежит ему
     LoyaltySystem->>DB: Открываем транзакцию.Блокируем счет UserBalance получаем текущий баланс
     alt Если баллов на счету достаточно для вывода
         LoyaltySystem->>DB: Создаем запись в Withdrawal, уменьшаем в UserBalance поле accrual увеличиваем withdrawal
