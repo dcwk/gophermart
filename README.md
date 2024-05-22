@@ -1,5 +1,5 @@
 ## Event stroming накопительная система лояльности «Гофермарт»
-![img_1.png](img_1.png)<br/>
+![doc/img_1.png](doc/img_1.png)<br/>
 https://miro.com/app/board/uXjVKJX4m7E=/?share_link_id=670000264537
 
 ## Таблицы бд
