@@ -8,12 +8,12 @@ import (
 )
 
 type Container struct {
-	conf            config.ServerConf
+	conf            *config.ServerConf
 	DB_             *sql.DB
-	UserRepository_ *repositories.UserRepository
+	UserRepository_ repositories.UserRepository
 }
 
-func NewContainer(conf config.ServerConf) *Container {
+func NewContainer(conf *config.ServerConf) *Container {
 	return &Container{
 		conf: conf,
 	}
@@ -31,7 +31,7 @@ func (c *Container) DB() *sql.DB {
 	return c.DB_
 }
 
-func (c *Container) UserRepository() *repositories.UserRepository {
+func (c *Container) UserRepository() repositories.UserRepository {
 	if c.UserRepository_ == nil {
 		c.UserRepository_ = repositories.NewUserRepository(c.DB())
 	}
