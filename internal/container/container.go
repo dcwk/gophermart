@@ -15,6 +15,7 @@ type Container struct {
 	UserRepository_ repositories.UserRepository
 
 	RegisterUserService_ *services.RegisterUserService
+	AuthUserService_     *services.AuthUserService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -49,4 +50,12 @@ func (c *Container) RegisterUserService() *services.RegisterUserService {
 	}
 
 	return c.RegisterUserService_
+}
+
+func (c *Container) AuthUserService() *services.AuthUserService {
+	if c.AuthUserService_ == nil {
+		c.AuthUserService_ = services.NewAuthService(c.UserRepository())
+	}
+
+	return c.AuthUserService_
 }
