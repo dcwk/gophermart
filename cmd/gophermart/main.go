@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/dcwk/gophermart/internal/config"
-	"github.com/dcwk/gophermart/internal/server"
 )
 
 func main() {
@@ -13,5 +12,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server.Run(conf)
+	handlers.Run(conf)
 }
