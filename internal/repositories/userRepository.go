@@ -26,6 +26,7 @@ func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*m
 	return &models.User{}, nil
 }
 
+// TODO: Нужно сделать поведение как GetUser и переименовать метод
 func (ur *userRepository) FindUserByLogin(ctx context.Context, login string) (*models.User, error) {
 	return &models.User{}, nil
 }
