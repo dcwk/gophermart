@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db, err := sql.Open("pgx", conf.DatabaseUri)
+	db, err := sql.Open("pgx", conf.DatabaseDSN)
 	if err != nil {
 		panic(err)
 	}

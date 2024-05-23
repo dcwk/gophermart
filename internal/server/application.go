@@ -8,6 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+type Application struct {
+	Container Container
+}
+
 func Run(conf *config.ServerConf) {
 	if err := http.ListenAndServe(conf.RunAddress, Router()); err != nil {
 		panic(err)
