@@ -8,8 +8,8 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, user models.User) (models.User, error)
-	FindUserByID(ctx context.Context, id int64) (models.User, error)
+	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	FindUserByLogin(ctx context.Context, login string) (*models.User, error)
 }
 
 type userRepository struct {
@@ -22,10 +22,10 @@ func NewUserRepository(db *sql.DB) UserRepository {
 	}
 }
 
-func (ur *userRepository) CreateUser(ctx context.Context, user models.User) (models.User, error) {
-	return models.User{}, nil
+func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
+	return &models.User{}, nil
 }
 
-func (ur *userRepository) FindUserByID(ctx context.Context, id int64) (models.User, error) {
-	return models.User{}, nil
+func (ur *userRepository) FindUserByLogin(ctx context.Context, login string) (*models.User, error) {
+	return &models.User{}, nil
 }
