@@ -9,16 +9,19 @@ import (
 )
 
 type Application struct {
-	Container Container
+	Container *Container
 }
 
 func Run(conf *config.ServerConf) {
-	if err := http.ListenAndServe(conf.RunAddress, Router()); err != nil {
+	app := Application{
+		Container: NewContainer(conf),
+	}
+	if err := http.ListenAndServe(conf.RunAddress, app.Router()); err != nil {
 		panic(err)
 	}
 }
 
-func Router() chi.Router {
+func (app *Application) Router() chi.Router {
 	r := chi.NewRouter()
 
 	h := handlers.Handlers{}
