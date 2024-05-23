@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/dcwk/gophermart/internal/application"
 	"github.com/dcwk/gophermart/internal/config"
 )
 
@@ -12,5 +13,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handlers.Run(conf)
+	application.Run(conf)
 }
