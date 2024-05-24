@@ -6,7 +6,7 @@ import (
 
 	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
-	"github.com/dcwk/gophermart/internal/utils"
+	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
 type AuthUserService struct {
@@ -25,7 +25,7 @@ func (aus *AuthUserService) Authenticate(ctx context.Context, user *models.User)
 		return "", fmt.Errorf("failed to find user by login: %w", err)
 	}
 
-	token, err := utils.BuildJWTString(currentUser.ID)
+	token, err := auth.BuildJWTString(currentUser.ID)
 	if err != nil {
 		return "", fmt.Errorf("failed to build JWT token: %w", err)
 	}
