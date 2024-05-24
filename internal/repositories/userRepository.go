@@ -37,7 +37,17 @@ func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*m
 	return user, nil
 }
 
-// TODO: Нужно сделать поведение как GetUser и переименовать метод
 func (ur *userRepository) FindUserByLogin(ctx context.Context, login string) (*models.User, error) {
-	return &models.User{}, nil
+	var user models.User
+	row := ur.DB.QueryRow(
+		ctx,
+		`SELECT id, login, password FROM public.user WHERE login = $1`,
+		login,
+	)
+	err := row.Scan(&user.ID, &user.Login, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
