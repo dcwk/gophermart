@@ -1,7 +1,11 @@
 package container
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/dcwk/gophermart/internal/config"
 	"github.com/dcwk/gophermart/internal/repositories"
@@ -10,7 +14,7 @@ import (
 
 type Container struct {
 	conf *config.ServerConf
-	DB_  *sql.DB
+	DB_  *pgxpool.Pool
 
 	UserRepository_ repositories.UserRepository
 
@@ -24,12 +28,21 @@ func NewContainer(conf *config.ServerConf) *Container {
 	}
 }
 
-func (c *Container) DB() *sql.DB {
+func (c *Container) DB() *pgxpool.Pool {
 	if c.DB_ == nil {
-		var err error
-		c.DB_, err = sql.Open("pgx", c.conf.DatabaseDSN)
+		conf, err := pgxpool.ParseConfig(c.conf.DatabaseDSN)
 		if err != nil {
-			panic(err)
+			fmt.Fprintf(os.Stderr, "Unable to parse database DSN: %v\n", err)
+			os.Exit(1)
+		}
+		if c.conf.DatabaseMaxConnections > 0 {
+			conf.MaxConns = int32(c.conf.DatabaseMaxConnections)
+		}
+
+		c.DB_, err = pgxpool.NewWithConfig(context.Background(), conf)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
+			os.Exit(1)
 		}
 	}
 
