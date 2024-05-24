@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"go.uber.org/zap"
 
 	"github.com/dcwk/gophermart/internal/config"
 	"github.com/dcwk/gophermart/internal/repositories"
@@ -13,9 +14,9 @@ import (
 )
 
 type Container struct {
-	conf *config.ServerConf
-	DB_  *pgxpool.Pool
-
+	conf            *config.ServerConf
+	DB_             *pgxpool.Pool
+	Logger_         *zap.Logger
 	UserRepository_ repositories.UserRepository
 
 	RegisterUserService_ *services.RegisterUserService
@@ -47,6 +48,28 @@ func (c *Container) DB() *pgxpool.Pool {
 	}
 
 	return c.DB_
+}
+
+func (c *Container) Logger(level string) *zap.Logger {
+	if c.Logger_ == nil {
+		lvl, err := zap.ParseAtomicLevel(level)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to parse log level: %v\n", err)
+			os.Exit(1)
+		}
+
+		cfg := zap.NewProductionConfig()
+		cfg.Level = lvl
+		zl, err := cfg.Build()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to initialize logger: %v\n", err)
+			os.Exit(1)
+		}
+
+		c.Logger_ = zl
+	}
+
+	return c.Logger_
 }
 
 func (c *Container) UserRepository() repositories.UserRepository {
