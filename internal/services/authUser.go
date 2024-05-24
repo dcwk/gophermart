@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
@@ -19,10 +18,14 @@ func NewAuthService(userRepository repositories.UserRepository) *AuthUserService
 	}
 }
 
-func (aus *AuthUserService) Authenticate(ctx context.Context, user *models.User) (string, error) {
-	currentUser, err := aus.UserRepository.FindUserByLogin(ctx, user.Login)
+func (aus *AuthUserService) Authenticate(ctx context.Context, login string, password string) (string, error) {
+	currentUser, err := aus.UserRepository.FindUserByLogin(ctx, login)
 	if err != nil || currentUser.ID == 0 {
 		return "", fmt.Errorf("failed to find user by login: %w", err)
+	}
+
+	if !currentUser.VerifyPassword(password) {
+		return "", fmt.Errorf("invalid password")
 	}
 
 	token, err := auth.BuildJWTString(currentUser.ID)
