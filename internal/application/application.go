@@ -5,6 +5,7 @@ import (
 
 	"github.com/dcwk/gophermart/internal/config"
 	"github.com/dcwk/gophermart/internal/container"
+	"github.com/dcwk/gophermart/internal/utils/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -23,6 +24,7 @@ func Run(conf *config.ServerConf) {
 
 func (app *Application) Router() chi.Router {
 	r := chi.NewRouter()
+	r.Use(middleware.RequestMiddleware(app.Container.Logger()))
 
 	r.Post("/api/user/register", app.Register)
 	r.Post("/api/user/login", app.Login)

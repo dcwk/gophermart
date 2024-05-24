@@ -50,9 +50,9 @@ func (c *Container) DB() *pgxpool.Pool {
 	return c.DB_
 }
 
-func (c *Container) Logger(level string) *zap.Logger {
+func (c *Container) Logger() *zap.Logger {
 	if c.Logger_ == nil {
-		lvl, err := zap.ParseAtomicLevel(level)
+		lvl, err := zap.ParseAtomicLevel(c.conf.LogLevel)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Unable to parse log level: %v\n", err)
 			os.Exit(1)
