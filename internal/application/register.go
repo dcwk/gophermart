@@ -1,21 +1,29 @@
 package application
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/dcwk/gophermart/internal/models"
 )
 
-// TODO: Доработать хэндлер
 func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
-	userData := models.User{
-		Login:    "test",
-		Password: "test",
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	_, err := app.Container.RegisterUserService().CreateUser(r.Context(), &userData)
+
+	newUser, err := app.Container.RegisterUserService().CreateUser(r.Context(), &user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(newUser); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+
+	return
 }

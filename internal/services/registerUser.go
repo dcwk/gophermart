@@ -24,7 +24,7 @@ func (regUs *RegisterUserService) CreateUser(ctx context.Context, user *models.U
 		return nil, err
 	}
 
-	if alreadyExistUser != nil {
+	if alreadyExistUser.ID != 0 {
 		return nil, fmt.Errorf("user with login %s already exists", user.Login)
 	}
 
