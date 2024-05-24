@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS "user"
 (
-    id bigint PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     login varchar NOT NULL,
     password varchar NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "user"
 
 CREATE TABLE IF NOT EXISTS "order"
 (
-    id bigint PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     user_id bigint NOT NULL,
     "number" varchar NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS "accrual"
 
 CREATE TABLE IF NOT EXISTS "withdrawal"
 (
-    id bigint PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     order_id bigint NOT NULL,
     "value" double precision NOT NULL,
     created_at timestamp without time zone NOT NULL,
