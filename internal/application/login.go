@@ -18,8 +18,9 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	var request LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		app.Container.Logger().Info(err.Error())
+		app.Container.Logger().Error(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	token, err := app.Container.AuthUserService().Authenticate(
@@ -35,7 +36,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 
 	resp := LoginResponse{Token: token}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		app.Container.Logger().Info(err.Error())
+		app.Container.Logger().Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

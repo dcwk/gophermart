@@ -18,16 +18,17 @@ func NewRegisterUserService(userRepository repositories.UserRepository) *Registe
 	}
 }
 
-func (regUs *RegisterUserService) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	alreadyExistUser, err := regUs.UserRepository.FindUserByLogin(ctx, user.Login)
-	if err != nil {
-		return nil, err
+func (regUs *RegisterUserService) CreateUser(ctx context.Context, login string, password string) (*models.User, error) {
+	_, err := regUs.UserRepository.FindUserByLogin(ctx, login)
+	if err == nil {
+		return nil, fmt.Errorf("user with login %s already exists", login)
+
 	}
 
-	if alreadyExistUser.ID != 0 {
-		return nil, fmt.Errorf("user with login %s already exists", user.Login)
+	user := &models.User{
+		Login:    login,
+		Password: password,
 	}
-
 	if err := user.HashPassword(); err != nil {
 		return nil, fmt.Errorf("failed to hash password: %v", err)
 	}
