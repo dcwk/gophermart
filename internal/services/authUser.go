@@ -21,7 +21,7 @@ func NewAuthService(userRepository repositories.UserRepository) *AuthUserService
 
 func (aus *AuthUserService) Authenticate(ctx context.Context, user *models.User) (string, error) {
 	currentUser, err := aus.UserRepository.FindUserByLogin(ctx, user.Login)
-	if err != nil {
+	if err != nil || currentUser.ID == 0 {
 		return "", fmt.Errorf("failed to find user by login: %w", err)
 	}
 
