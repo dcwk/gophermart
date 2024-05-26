@@ -26,7 +26,7 @@ func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		app.Container.Logger().Info(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
