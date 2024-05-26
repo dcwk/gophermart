@@ -102,7 +102,7 @@ func (c *Container) UserBalanceRepository() repositories.UserBalanceRepository {
 
 func (c *Container) RegisterUserService() *services.RegisterUserService {
 	if c.RegisterUserService_ == nil {
-		c.RegisterUserService_ = services.NewRegisterUserService(c.UserRepository())
+		c.RegisterUserService_ = services.NewRegisterUserService(c.UserRepository(), c.UserBalanceRepository())
 	}
 
 	return c.RegisterUserService_

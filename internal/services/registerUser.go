@@ -9,12 +9,17 @@ import (
 )
 
 type RegisterUserService struct {
-	UserRepository repositories.UserRepository
+	UserRepository        repositories.UserRepository
+	UserBalanceRepository repositories.UserBalanceRepository
 }
 
-func NewRegisterUserService(userRepository repositories.UserRepository) *RegisterUserService {
+func NewRegisterUserService(
+	userRepository repositories.UserRepository,
+	userBalanceRepository repositories.UserBalanceRepository,
+) *RegisterUserService {
 	return &RegisterUserService{
-		UserRepository: userRepository,
+		UserRepository:        userRepository,
+		UserBalanceRepository: userBalanceRepository,
 	}
 }
 
@@ -22,13 +27,9 @@ func (regUs *RegisterUserService) CreateUser(ctx context.Context, login string, 
 	_, err := regUs.UserRepository.GetUserByLogin(ctx, login)
 	if err == nil {
 		return nil, fmt.Errorf("user with login %s already exists", login)
-
 	}
 
-	user := &models.User{
-		Login:    login,
-		Password: password,
-	}
+	user := models.NewUser(login, password)
 	if err := user.HashPassword(); err != nil {
 		return nil, fmt.Errorf("failed to hash password: %v", err)
 	}
@@ -36,6 +37,12 @@ func (regUs *RegisterUserService) CreateUser(ctx context.Context, login string, 
 	user, err = regUs.UserRepository.CreateUser(ctx, user)
 	if err != nil {
 		return nil, fmt.Errorf("could not create user: %v", err)
+	}
+
+	userBalance := models.NewUserBalance(user.ID)
+	_, err = regUs.UserBalanceRepository.Create(ctx, userBalance)
+	if err != nil {
+		return nil, fmt.Errorf("could not create user balance: %v", err)
 	}
 
 	return user, nil

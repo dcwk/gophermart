@@ -8,6 +8,13 @@ type User struct {
 	Password string `json:"password"`
 }
 
+func NewUser(login string, password string) *User {
+	return &User{
+		Login:    login,
+		Password: password,
+	}
+}
+
 func (u *User) HashPassword() error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
