@@ -34,7 +34,6 @@ func BuildJWTString(userID int64) (string, error) {
 	return tokenString, nil
 }
 
-// TODO: Завернуть проверку в middleware
 func GetUserId(tokenString string) int64 {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims,
