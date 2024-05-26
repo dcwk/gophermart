@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/dcwk/gophermart/infrastructure"
 	"github.com/dcwk/gophermart/internal/application"
 	"github.com/dcwk/gophermart/internal/config"
+	"github.com/dcwk/gophermart/migrations"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	err = infrastructure.RunMigrations(context.Background(), db)
+	err = migrations.RunMigrations(context.Background(), db)
 	if err != nil {
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-package infrastructure
+package migrations
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/pressly/goose/v3"
 )
 
-//go:embed migrations/*.sql
+//go:embed sql/*.sql
 var embedMigrations embed.FS
 
 func RunMigrations(ctx context.Context, db *sql.DB) error {
@@ -20,7 +20,7 @@ func RunMigrations(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 
-	if err := goose.UpContext(ctx, db, "migrations"); err != nil {
+	if err := goose.UpContext(ctx, db, "sql"); err != nil {
 		return err
 	}
 	fmt.Println("DB Migration: success")
