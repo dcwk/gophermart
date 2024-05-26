@@ -6,6 +6,7 @@ import (
 
 	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
+	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
 type RegisterUserService struct {
@@ -23,27 +24,32 @@ func NewRegisterUserService(
 	}
 }
 
-func (s *RegisterUserService) Handle(ctx context.Context, login string, password string) (*models.User, error) {
+func (s *RegisterUserService) Handle(ctx context.Context, login string, password string) (string, error) {
 	_, err := s.UserRepository.GetUserByLogin(ctx, login)
 	if err == nil {
-		return nil, fmt.Errorf("user with login %s already exists", login)
+		return "", fmt.Errorf("user with login %s already exists", login)
 	}
 
 	user := models.NewUser(login, password)
 	if err := user.HashPassword(); err != nil {
-		return nil, fmt.Errorf("failed to hash password: %v", err)
+		return "", fmt.Errorf("failed to hash password: %v", err)
 	}
 
 	user, err = s.UserRepository.CreateUser(ctx, user)
 	if err != nil {
-		return nil, fmt.Errorf("could not create user: %v", err)
+		return "", fmt.Errorf("could not create user: %v", err)
 	}
 
 	userBalance := models.NewUserBalance(user.ID)
 	_, err = s.UserBalanceRepository.Create(ctx, userBalance)
 	if err != nil {
-		return nil, fmt.Errorf("could not create user balance: %v", err)
+		return "", fmt.Errorf("could not create user balance: %v", err)
 	}
 
-	return user, nil
+	token, err := auth.BuildJWTString(user.ID)
+	if err != nil {
+		return "", fmt.Errorf("failed to build JWT token: %w", err)
+	}
+
+	return token, nil
 }

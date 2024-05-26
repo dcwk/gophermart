@@ -10,10 +10,6 @@ type RegisterRequest struct {
 	Password string `json:"password"`
 }
 
-type RegisterResponse struct {
-	ID int64 `json:"userId"`
-}
-
 func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 	var request RegisterRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -23,7 +19,7 @@ func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := app.Container.RegisterUserService().Handle(
+	token, err := app.Container.RegisterUserService().Handle(
 		r.Context(),
 		request.Login,
 		request.Password,
@@ -34,16 +30,8 @@ func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := RegisterResponse{
-		ID: user.ID,
-	}
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		app.Container.Logger().Error(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
+	w.Header().Set("Authorization", "Bearer "+token)
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	return
 }
