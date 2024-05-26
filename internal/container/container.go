@@ -18,8 +18,9 @@ type Container struct {
 	DB_     *pgxpool.Pool
 	Logger_ *zap.Logger
 
-	UserRepository_  repositories.UserRepository
-	OrderRepository_ repositories.OrderRepository
+	UserRepository_        repositories.UserRepository
+	OrderRepository_       repositories.OrderRepository
+	UserBalanceRepository_ repositories.UserBalanceRepository
 
 	RegisterUserService_ *services.RegisterUserService
 	AuthUserService_     *services.AuthUserService
@@ -89,6 +90,14 @@ func (c *Container) OrderRepository() repositories.OrderRepository {
 	}
 
 	return c.OrderRepository_
+}
+
+func (c *Container) UserBalanceRepository() repositories.UserBalanceRepository {
+	if c.UserBalanceRepository_ == nil {
+		c.UserBalanceRepository_ = repositories.NewUserBalanceRepository(c.DB())
+	}
+
+	return c.UserBalanceRepository_
 }
 
 func (c *Container) RegisterUserService() *services.RegisterUserService {
