@@ -14,10 +14,12 @@ import (
 )
 
 type Container struct {
-	conf            *config.ServerConf
-	DB_             *pgxpool.Pool
-	Logger_         *zap.Logger
-	UserRepository_ repositories.UserRepository
+	conf    *config.ServerConf
+	DB_     *pgxpool.Pool
+	Logger_ *zap.Logger
+
+	UserRepository_  repositories.UserRepository
+	OrderRepository_ repositories.OrderRepository
 
 	RegisterUserService_ *services.RegisterUserService
 	AuthUserService_     *services.AuthUserService
@@ -78,6 +80,14 @@ func (c *Container) UserRepository() repositories.UserRepository {
 	}
 
 	return c.UserRepository_
+}
+
+func (c *Container) OrderRepository() repositories.OrderRepository {
+	if c.OrderRepository_ == nil {
+		c.OrderRepository_ = repositories.NewOrderRepository(c.DB())
+	}
+
+	return c.OrderRepository_
 }
 
 func (c *Container) RegisterUserService() *services.RegisterUserService {
