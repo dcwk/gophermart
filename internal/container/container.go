@@ -23,6 +23,7 @@ type Container struct {
 
 	RegisterUserService_ *services.RegisterUserService
 	AuthUserService_     *services.AuthUserService
+	GetOrdersService_    *services.GetOrdersService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -104,4 +105,12 @@ func (c *Container) AuthUserService() *services.AuthUserService {
 	}
 
 	return c.AuthUserService_
+}
+
+func (c *Container) GetOrdersService() *services.GetOrdersService {
+	if c.GetOrdersService_ == nil {
+		c.GetOrdersService_ = services.NewGetOrdersService(c.UserRepository(), c.OrderRepository())
+	}
+
+	return c.GetOrdersService_
 }
