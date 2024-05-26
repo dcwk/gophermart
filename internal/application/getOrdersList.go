@@ -9,7 +9,7 @@ import (
 )
 
 type OrdersListResponse struct {
-	OrdersList []*models.Order
+	OrdersList []*models.Order `json:"orders"`
 }
 
 func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {

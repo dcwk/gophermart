@@ -30,13 +30,13 @@ func (or *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]
 
 	var orders []*models.Order
 	for rows.Next() {
-		order := &models.Order{}
-		err := rows.Scan(order.ID, &order.UserID, &order.Number, &order.CreatedAt)
+		order := models.Order{}
+		err := rows.Scan(&order.ID, &order.UserID, &order.Number, &order.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
 
-		orders = append(orders, order)
+		orders = append(orders, &order)
 	}
 
 	return orders, nil
