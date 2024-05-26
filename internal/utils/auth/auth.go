@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -34,7 +35,7 @@ func BuildJWTString(userID int64) (string, error) {
 	return tokenString, nil
 }
 
-func GetUserId(tokenString string) int64 {
+func GetUserID(tokenString string) int64 {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims,
 		func(t *jwt.Token) (interface{}, error) {
@@ -54,4 +55,8 @@ func GetUserId(tokenString string) int64 {
 
 	fmt.Println("Token os valid")
 	return claims.UserID
+}
+
+func GetUserIDFromCtx(ctx context.Context) int64 {
+	return ctx.Value("userId").(int64)
 }

@@ -26,13 +26,17 @@ func (app *Application) Router() chi.Router {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestMiddleware(app.Container.Logger()))
 
-	r.Post("/api/user/register", app.Register)
-	r.Post("/api/user/login", app.Login)
-	r.Post("/api/user/orders", app.LoadOrder)
-	r.Get("/api/user/orders", app.GetOrdersList)
-	r.Get("/api/user/balance", app.GetUserBalance)
-	r.Post("/api/user/balance/withdraw", app.WithdrawRequest)
-	r.Get("/api/user/withdrawals", app.GetWithdrawalsList)
+	r.Route("/api/user", func(r chi.Router) {
+		r.Post("/register", app.Register)
+		r.Post("/login", app.Login)
+
+		r.With(middleware.JwtAuth).Get("/orders", app.GetOrdersList)
+		r.With(middleware.JwtAuth).Get("/balance", app.GetUserBalance)
+		r.With(middleware.JwtAuth).Get("/withdrawals", app.GetWithdrawalsList)
+
+		r.With(middleware.JwtAuth).Post("/order", app.LoadOrder)
+		r.With(middleware.JwtAuth).Post("/balance/withdraw", app.WithdrawRequest)
+	})
 
 	return r
 }
