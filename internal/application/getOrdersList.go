@@ -20,7 +20,7 @@ func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		app.Container.Logger().Info(err.Error())
-		http.Error(w, err.Error(), http.StatusForbidden)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

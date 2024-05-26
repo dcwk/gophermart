@@ -23,7 +23,7 @@ func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := app.Container.RegisterUserService().CreateUser(
+	user, err := app.Container.RegisterUserService().Handle(
 		r.Context(),
 		request.Login,
 		request.Password,

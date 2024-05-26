@@ -23,7 +23,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := app.Container.AuthUserService().Authenticate(
+	token, err := app.Container.AuthUserService().Handle(
 		r.Context(),
 		request.Login,
 		request.Password,

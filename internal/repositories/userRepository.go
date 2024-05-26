@@ -23,10 +23,10 @@ func NewUserRepository(db *pgxpool.Pool) UserRepository {
 	}
 }
 
-func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
-	row := ur.DB.QueryRow(
+func (r *userRepository) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
+	row := r.DB.QueryRow(
 		ctx,
-		`INSERT INTO public.user (login, password, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING ("id")`,
+		`INSERT INTO "user" (login, password, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING ("id")`,
 		user.Login,
 		user.Password,
 	)
@@ -38,11 +38,11 @@ func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*m
 	return user, nil
 }
 
-func (ur *userRepository) GetUserByID(ctx context.Context, userID int64) (*models.User, error) {
+func (r *userRepository) GetUserByID(ctx context.Context, userID int64) (*models.User, error) {
 	var user models.User
-	row := ur.DB.QueryRow(
+	row := r.DB.QueryRow(
 		ctx,
-		`SELECT id, login, password FROM public.user WHERE id = $1`,
+		`SELECT id, login, password FROM "user" WHERE id = $1`,
 		userID,
 	)
 	err := row.Scan(&user.ID, &user.Login, &user.Password)
@@ -53,11 +53,11 @@ func (ur *userRepository) GetUserByID(ctx context.Context, userID int64) (*model
 	return &user, nil
 }
 
-func (ur *userRepository) GetUserByLogin(ctx context.Context, login string) (*models.User, error) {
+func (r *userRepository) GetUserByLogin(ctx context.Context, login string) (*models.User, error) {
 	var user models.User
-	row := ur.DB.QueryRow(
+	row := r.DB.QueryRow(
 		ctx,
-		`SELECT id, login, password FROM public.user WHERE login = $1`,
+		`SELECT id, login, password FROM "user" WHERE login = $1`,
 		login,
 	)
 	err := row.Scan(&user.ID, &user.Login, &user.Password)

@@ -23,13 +23,13 @@ func NewGetOrdersService(
 	}
 }
 
-func (gor *GetOrdersService) Handle(ctx context.Context, userID int64) ([]*models.Order, error) {
-	user, err := gor.UserRepository.GetUserByID(ctx, userID)
+func (s *GetOrdersService) Handle(ctx context.Context, userID int64) ([]*models.Order, error) {
+	user, err := s.UserRepository.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("user %d not found", userID)
 	}
 
-	orders, err := gor.OrderRepository.FindUserOrders(ctx, user.ID)
+	orders, err := s.OrderRepository.FindUserOrders(ctx, user.ID)
 	if err != nil {
 		return nil, err
 	}

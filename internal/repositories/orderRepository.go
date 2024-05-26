@@ -21,8 +21,8 @@ func NewOrderRepository(db *pgxpool.Pool) OrderRepository {
 	}
 }
 
-func (or *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error) {
-	rows, err := or.DB.Query(ctx, `SELECT id, user_id, number, created_at FROM "order" WHERE user_id=$1`, userID)
+func (r *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error) {
+	rows, err := r.DB.Query(ctx, `SELECT id, user_id, number, created_at FROM "order" WHERE user_id=$1`, userID)
 	if err != nil {
 		return nil, err
 	}
