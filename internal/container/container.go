@@ -22,9 +22,10 @@ type Container struct {
 	OrderRepository_       repositories.OrderRepository
 	UserBalanceRepository_ repositories.UserBalanceRepository
 
-	RegisterUserService_ *services.RegisterUserService
-	AuthUserService_     *services.AuthUserService
-	GetOrdersService_    *services.GetOrdersService
+	RegisterUserService_   *services.RegisterUserService
+	AuthUserService_       *services.AuthUserService
+	GetOrdersService_      *services.GetOrdersService
+	GetUserBalanceService_ *services.GetUserBalanceService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -122,4 +123,12 @@ func (c *Container) GetOrdersService() *services.GetOrdersService {
 	}
 
 	return c.GetOrdersService_
+}
+
+func (c *Container) GetUserBalanceService() *services.GetUserBalanceService {
+	if c.GetUserBalanceService_ == nil {
+		c.GetUserBalanceService_ = services.NewGetUserBalanceService(c.UserRepository(), c.UserBalanceRepository())
+	}
+
+	return c.GetUserBalanceService_
 }

@@ -10,6 +10,7 @@ import (
 
 type UserBalanceRepository interface {
 	Create(ctx context.Context, userBalance *models.UserBalance) (*models.UserBalance, error)
+	GetUserBalanceByID(ctx context.Context, userID int64) (*models.UserBalance, error)
 }
 
 type userBalanceRepository struct {
@@ -35,4 +36,19 @@ func (r *userBalanceRepository) Create(ctx context.Context, userBalance *models.
 	}
 
 	return userBalance, nil
+}
+
+func (r *userBalanceRepository) GetUserBalanceByID(ctx context.Context, userID int64) (*models.UserBalance, error) {
+	var userBalance models.UserBalance
+	row := r.DB.QueryRow(
+		ctx,
+		`SELECT user_id, accrual, withdrawal FROM public.user_balance WHERE user_id = $1`,
+		userID,
+	)
+	err := row.Scan(&userBalance.UserId, &userBalance.Accrual, &userBalance.Withdrawal)
+	if err != nil {
+		return nil, err
+	}
+
+	return &userBalance, nil
 }
