@@ -39,6 +39,7 @@ Accrual {
 
 Withdrawal {
     int id PK
+    int userId FK
     int orderId FK
     double value
     timestamp createdAt
