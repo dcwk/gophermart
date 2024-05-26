@@ -21,11 +21,13 @@ type Container struct {
 	UserRepository_        repositories.UserRepository
 	OrderRepository_       repositories.OrderRepository
 	UserBalanceRepository_ repositories.UserBalanceRepository
+	WithdrawalRepository_  repositories.WithdrawalRepository
 
 	RegisterUserService_   *services.RegisterUserService
 	AuthUserService_       *services.AuthUserService
 	GetOrdersService_      *services.GetOrdersService
 	GetUserBalanceService_ *services.GetUserBalanceService
+	GetWithdrawalsService_ *services.GetWithdrawalsService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -101,6 +103,14 @@ func (c *Container) UserBalanceRepository() repositories.UserBalanceRepository {
 	return c.UserBalanceRepository_
 }
 
+func (c *Container) WithdrawalRepository() repositories.WithdrawalRepository {
+	if c.WithdrawalRepository_ == nil {
+		c.WithdrawalRepository_ = repositories.NewWithdrawalRepository(c.DB())
+	}
+
+	return c.WithdrawalRepository_
+}
+
 func (c *Container) RegisterUserService() *services.RegisterUserService {
 	if c.RegisterUserService_ == nil {
 		c.RegisterUserService_ = services.NewRegisterUserService(c.UserRepository(), c.UserBalanceRepository())
@@ -131,4 +141,12 @@ func (c *Container) GetUserBalanceService() *services.GetUserBalanceService {
 	}
 
 	return c.GetUserBalanceService_
+}
+
+func (c *Container) GetWithdrawalsService() *services.GetWithdrawalsService {
+	if c.GetWithdrawalsService_ == nil {
+		c.GetWithdrawalsService_ = services.NewGetWithdrawalsService(c.UserRepository(), c.WithdrawalRepository())
+	}
+
+	return c.GetWithdrawalsService_
 }
