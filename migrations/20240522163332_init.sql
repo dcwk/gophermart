@@ -45,9 +45,11 @@ CREATE TABLE IF NOT EXISTS "accrual"
 CREATE TABLE IF NOT EXISTS "withdrawal"
 (
     id SERIAL PRIMARY KEY NOT NULL,
+    user_id bigint NOT NULL,
     order_id bigint NOT NULL,
     "value" double precision NOT NULL,
     created_at timestamp without time zone NOT NULL,
+    CONSTRAINT fk_user_withdrawals FOREIGN KEY(user_id) REFERENCES "user"(id),
     CONSTRAINT fk_order_withdrawals FOREIGN KEY(order_id) REFERENCES "order"(id)
 );
 -- +goose StatementEnd
