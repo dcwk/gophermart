@@ -19,7 +19,7 @@ func NewRegisterUserService(userRepository repositories.UserRepository) *Registe
 }
 
 func (regUs *RegisterUserService) CreateUser(ctx context.Context, login string, password string) (*models.User, error) {
-	_, err := regUs.UserRepository.FindUserByLogin(ctx, login)
+	_, err := regUs.UserRepository.GetUserByLogin(ctx, login)
 	if err == nil {
 		return nil, fmt.Errorf("user with login %s already exists", login)
 

@@ -1,7 +1,7 @@
 package application
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/dcwk/gophermart/internal/models"
@@ -9,9 +9,29 @@ import (
 )
 
 type OrdersListResponse struct {
-	OrdersList []models.Order
+	OrdersList []*models.Order
 }
 
 func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
-	app.Container.Logger().Info(fmt.Sprintf("User with id: %v", auth.GetUserIDFromCtx(r.Context())))
+	userID := auth.GetUserIDFromCtx(r.Context())
+	orders, err := app.Container.GetOrdersService().Handle(
+		r.Context(),
+		userID,
+	)
+	if err != nil {
+		app.Container.Logger().Info(err.Error())
+		http.Error(w, err.Error(), http.StatusForbidden)
+		return
+	}
+
+	resp := OrdersListResponse{OrdersList: orders}
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		app.Container.Logger().Error(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	return
 }

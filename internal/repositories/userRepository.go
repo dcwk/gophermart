@@ -9,7 +9,8 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
-	FindUserByLogin(ctx context.Context, login string) (*models.User, error)
+	GetUserByID(ctx context.Context, ID int64) (*models.User, error)
+	GetUserByLogin(ctx context.Context, login string) (*models.User, error)
 }
 
 type userRepository struct {
@@ -37,7 +38,22 @@ func (ur *userRepository) CreateUser(ctx context.Context, user *models.User) (*m
 	return user, nil
 }
 
-func (ur *userRepository) FindUserByLogin(ctx context.Context, login string) (*models.User, error) {
+func (ur *userRepository) GetUserByID(ctx context.Context, userID int64) (*models.User, error) {
+	var user models.User
+	row := ur.DB.QueryRow(
+		ctx,
+		`SELECT id, login, password FROM public.user WHERE id = $1`,
+		userID,
+	)
+	err := row.Scan(&user.ID, &user.Login, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (ur *userRepository) GetUserByLogin(ctx context.Context, login string) (*models.User, error) {
 	var user models.User
 	row := ur.DB.QueryRow(
 		ctx,
