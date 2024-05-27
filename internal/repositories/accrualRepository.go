@@ -35,3 +35,18 @@ func (r *accrualRepository) Create(ctx context.Context, accrual *models.Accrual)
 
 	return accrual, nil
 }
+
+func (r *accrualRepository) Update(ctx context.Context, accrual *models.Accrual) (*models.Accrual, error) {
+	_, err := r.DB.Query(
+		ctx,
+		`UPDATE accrual SET status=$1, value=$2, updated_at=NOW() WHERE order_id=$3`,
+		accrual.Status,
+		accrual.Value,
+		accrual.OrderID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return accrual, nil
+}
