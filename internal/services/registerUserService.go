@@ -35,7 +35,7 @@ func (s *RegisterUserService) Handle(ctx context.Context, login string, password
 		return "", fmt.Errorf("failed to hash password: %v", err)
 	}
 
-	user, err = s.UserRepository.CreateUser(ctx, user)
+	user, err = s.UserRepository.Create(ctx, user)
 	if err != nil {
 		return "", fmt.Errorf("could not create user: %v", err)
 	}
