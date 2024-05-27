@@ -31,6 +31,11 @@ func NewWithdrawRequestService(
 	}
 }
 
-func (s *WithdrawRequestService) Handle(ctx context.Context, userID int64, orderNumber string) (string, error) {
+func (s *WithdrawRequestService) Handle(
+	ctx context.Context,
+	userID int64,
+	orderNumber string,
+	sum float64,
+) (string, error) {
 	return "", nil
 }
