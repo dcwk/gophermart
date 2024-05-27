@@ -40,7 +40,7 @@ func (app *Application) Router() chi.Router {
 		r.With(middleware.JwtAuth).Get("/balance", app.GetUserBalance)
 		r.With(middleware.JwtAuth).Get("/withdrawals", app.GetWithdrawalsList)
 
-		r.With(middleware.JwtAuth).Post("/order", app.LoadOrder)
+		r.With(middleware.JwtAuth).Post("/orders", app.LoadOrder)
 		r.With(middleware.JwtAuth).Post("/balance/withdraw", app.WithdrawRequest)
 	})
 
