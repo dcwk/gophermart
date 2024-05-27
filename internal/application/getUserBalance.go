@@ -8,8 +8,8 @@ import (
 )
 
 type UserBalanceResponse struct {
-	Accrual    float64 `json:"accrual"`
-	Withdrawal float64 `json:"withdrawal"`
+	Current   float64 `json:"current"`
+	Withdrawn float64 `json:"withdrawn"`
 }
 
 func (app *Application) GetUserBalance(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +25,10 @@ func (app *Application) GetUserBalance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := UserBalanceResponse{Accrual: userBalance.Accrual, Withdrawal: userBalance.Withdrawal}
+	resp := UserBalanceResponse{
+		Current:   userBalance.Accrual,
+		Withdrawn: userBalance.Withdrawal,
+	}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		app.Container.Logger().Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
