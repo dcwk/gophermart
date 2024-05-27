@@ -24,13 +24,6 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if err := json.NewEncoder(w).Encode(resp); err != nil {
-	//	app.Container.Logger().Error(err.Error())
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
-	//
-	//w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-	//w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusAccepted)
 	return
 }

@@ -5,12 +5,14 @@ import (
 	"fmt"
 
 	"github.com/dcwk/gophermart/internal/models"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserBalanceRepository interface {
 	Create(ctx context.Context, userBalance *models.UserBalance) (*models.UserBalance, error)
-	GetUserBalanceByID(ctx context.Context, userID int64) (*models.UserBalance, error)
+	Update(ctx context.Context, userBalance *models.UserBalance) error
+	GetUserBalanceByID(ctx context.Context, userID int64, withLock bool) (*models.UserBalance, error)
 }
 
 type userBalanceRepository struct {
@@ -38,13 +40,41 @@ func (r *userBalanceRepository) Create(ctx context.Context, userBalance *models.
 	return userBalance, nil
 }
 
-func (r *userBalanceRepository) GetUserBalanceByID(ctx context.Context, userID int64) (*models.UserBalance, error) {
-	var userBalance models.UserBalance
-	row := r.DB.QueryRow(
+func (r *userBalanceRepository) Update(ctx context.Context, userBalance *models.UserBalance) error {
+	_, err := r.DB.Query(
 		ctx,
-		`SELECT user_id, accrual, withdrawal FROM public.user_balance WHERE user_id = $1`,
-		userID,
+		`UPDATE user_balance SET accrual = $2, withdrawal = $3 WHERE user_id = $1`,
+		userBalance.Accrual,
+		userBalance.Withdrawal,
+		userBalance.UserId,
 	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userBalanceRepository) GetUserBalanceByID(ctx context.Context, userID int64, withLock bool) (*models.UserBalance, error) {
+	var (
+		userBalance models.UserBalance
+		row         pgx.Row
+	)
+
+	if withLock {
+		row = r.DB.QueryRow(
+			ctx,
+			`SELECT user_id, accrual, withdrawal FROM public.user_balance WHERE user_id = $1 FOR UPDATE`,
+			userID,
+		)
+	} else {
+		row = r.DB.QueryRow(
+			ctx,
+			`SELECT user_id, accrual, withdrawal FROM public.user_balance WHERE user_id = $1`,
+			userID,
+		)
+	}
+
 	err := row.Scan(&userBalance.UserId, &userBalance.Accrual, &userBalance.Withdrawal)
 	if err != nil {
 		return nil, err

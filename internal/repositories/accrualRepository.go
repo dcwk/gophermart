@@ -9,6 +9,7 @@ import (
 
 type AccrualRepository interface {
 	Create(ctx context.Context, accrual *models.Accrual) (*models.Accrual, error)
+	Update(ctx context.Context, accrual *models.Accrual) (*models.Accrual, error)
 }
 
 type accrualRepository struct {

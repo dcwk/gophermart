@@ -13,3 +13,7 @@ func NewUserBalance(userId int64) *UserBalance {
 		Withdrawal: 0,
 	}
 }
+
+func (userBalance *UserBalance) UpdateAccrual(value float64) {
+	userBalance.Accrual += value
+}

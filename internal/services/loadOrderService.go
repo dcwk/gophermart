@@ -65,7 +65,6 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 
 	wg.Add(1)
 	var bonusSystemResponse bonusSystemResponse
-
 	go s.getOrderDataByNumber(order.Number, &bonusSystemResponse)
 	wg.Wait()
 	if &bonusSystemResponse == nil {
@@ -73,6 +72,23 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	}
 
 	accrual.UpdateStatus(bonusSystemResponse.Status, bonusSystemResponse.Accrual)
+	accrual, err = s.AccrualRepository.Update(ctx, accrual)
+	if err != nil {
+		return fmt.Errorf("could not update accrual: %v", err)
+	}
+	if accrual.Value == 0 {
+		return nil
+	}
+
+	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, true)
+	if err != nil {
+		return fmt.Errorf("could not get user balance: %v", err)
+	}
+	userBalance.UpdateAccrual(accrual.Value)
+	err = s.UserBalanceRepository.Update(ctx, userBalance)
+	if err != nil {
+		return fmt.Errorf("could not update user balance: %v", err)
+	}
 
 	return nil
 }

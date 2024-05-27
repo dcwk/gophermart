@@ -29,7 +29,7 @@ func (s *GetUserBalanceService) Handle(ctx context.Context, userID int64) (*mode
 		return nil, fmt.Errorf("user %d not found", userID)
 	}
 
-	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID)
+	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, false)
 	if err != nil {
 		return nil, fmt.Errorf("user balance not found for user %d", userID)
 	}
