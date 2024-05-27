@@ -17,7 +17,7 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	userID := auth.GetUserIDFromCtx(r.Context())
 
-	err = app.Container.LoadOrderService().Handle(string(orderNumber), userID)
+	err = app.Container.LoadOrderService().Handle(r.Context(), string(orderNumber), userID)
 	if err != nil {
 		app.Container.Logger().Info(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
