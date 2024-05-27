@@ -8,6 +8,7 @@ import (
 )
 
 type OrderRepository interface {
+	Create(ctx context.Context, order *models.Order) (*models.Order, error)
 	FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error)
 }
 
@@ -19,6 +20,21 @@ func NewOrderRepository(db *pgxpool.Pool) OrderRepository {
 	return &orderRepository{
 		DB: db,
 	}
+}
+
+func (r *orderRepository) Create(ctx context.Context, order *models.Order) (*models.Order, error) {
+	row := r.DB.QueryRow(
+		ctx,
+		`INSERT INTO "order" (user_id, number, created_at) VALUES ($1, $2, NOW()) RETURNING ("id")`,
+		order.UserID,
+		order.Number,
+	)
+	err := row.Scan(&order.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return order, nil
 }
 
 func (r *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error) {
