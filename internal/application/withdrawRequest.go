@@ -45,6 +45,4 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-
-	return
 }

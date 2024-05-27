@@ -14,20 +14,20 @@ type Claims struct {
 }
 
 // TODO: добавить возможность управлять протуханием из конфига
-const TOKEN_EXP = time.Hour * 3
+const TokenExp = time.Hour * 3
 
 // TODO: убрать ключ в конфиг
-const SECRET_KEY = "supersecretkey"
+const SecretKey = "supersecretkey"
 
 func BuildJWTString(userID int64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TOKEN_EXP)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExp)),
 		},
 		UserID: userID,
 	})
 
-	tokenString, err := token.SignedString([]byte(SECRET_KEY))
+	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +42,7 @@ func GetUserID(tokenString string) int64 {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 			}
-			return []byte(SECRET_KEY), nil
+			return []byte(SecretKey), nil
 		})
 	if err != nil {
 		return -1

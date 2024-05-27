@@ -11,13 +11,14 @@ import (
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := getTokenFromRequest(r)
-		userId := auth.GetUserID(token)
-		if userId <= 0 {
+		userID := auth.GetUserID(token)
+		if userID <= 0 {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "userId", userId)
+		userKey := "userId"
+		ctx := context.WithValue(r.Context(), userKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

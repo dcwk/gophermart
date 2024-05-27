@@ -42,5 +42,4 @@ func (app *Application) GetWithdrawalsList(w http.ResponseWriter, r *http.Reques
 	}
 
 	w.WriteHeader(http.StatusOK)
-	return
 }

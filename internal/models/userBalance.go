@@ -6,9 +6,9 @@ type UserBalance struct {
 	Withdrawal float64 `json:"withdrawal"`
 }
 
-func NewUserBalance(userId int64) *UserBalance {
+func NewUserBalance(userID int64) *UserBalance {
 	return &UserBalance{
-		UserId:     userId,
+		UserId:     userID,
 		Accrual:    0,
 		Withdrawal: 0,
 	}

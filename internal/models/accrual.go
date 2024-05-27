@@ -17,9 +17,9 @@ type Accrual struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func NewAccrual(orderId int64) *Accrual {
+func NewAccrual(orderID int64) *Accrual {
 	return &Accrual{
-		OrderID:   orderId,
+		OrderID:   orderID,
 		Status:    Processing,
 		Value:     0,
 		CreatedAt: time.Now(),
