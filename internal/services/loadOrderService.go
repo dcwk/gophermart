@@ -14,11 +14,11 @@ import (
 )
 
 const (
-	NotFound           = "NotFound"
-	OrderAlreadyExists = "OrderAlreadyExists"
-	//IncorrectOrderNumber = "IncorrectOrderNumber"
-	ForbiddenOrder = "ForbiddenOrder"
-	InternalError  = "InternalError"
+	NotFound             = "NotFound"
+	OrderAlreadyExists   = "OrderAlreadyExists"
+	IncorrectOrderNumber = "IncorrectOrderNumber"
+	ForbiddenOrder       = "ForbiddenOrder"
+	InternalError        = "InternalError"
 )
 
 type LoadOrderService struct {
@@ -70,6 +70,9 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	}
 
 	order := models.NewOrder(user.ID, orderNumber)
+	if !order.IsValid() {
+		return IncorrectOrderNumber, nil
+	}
 	order, err = s.OrderRepository.Create(ctx, order)
 	if err != nil {
 		return InternalError, fmt.Errorf("could not create order: %v", err)

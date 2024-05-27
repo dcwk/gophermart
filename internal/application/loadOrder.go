@@ -29,6 +29,8 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	case services.ForbiddenOrder:
 		w.WriteHeader(http.StatusConflict)
+	case services.IncorrectOrderNumber:
+		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 	}
