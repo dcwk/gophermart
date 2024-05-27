@@ -2,10 +2,14 @@ package services
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
 	"go.uber.org/zap"
 )
+
+const NotEnoughPoints = "NotEnoughPoints"
 
 type WithdrawRequestService struct {
 	Logger                *zap.Logger
@@ -37,5 +41,40 @@ func (s *WithdrawRequestService) Handle(
 	orderNumber string,
 	sum float64,
 ) (string, error) {
+	user, err := s.UserRepository.GetUserByID(ctx, userID)
+	if err != nil {
+		s.Logger.Error(fmt.Sprintf("user %d not found", userID))
+		return NotFound, nil
+	}
+
+	order := models.NewOrder(user.ID, orderNumber)
+	if !order.IsValid() {
+		return IncorrectOrderNumber, nil
+	}
+	order, err = s.OrderRepository.FindOrderByNumber(ctx, order.Number)
+	if err != nil {
+		return InternalError, err
+	}
+	if order.UserID != user.ID {
+		return ForbiddenOrder, nil
+	}
+
+	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, true)
+	if err != nil {
+		return InternalError, err
+	}
+	if !userBalance.IsWithdrawPossible(sum) {
+		return NotEnoughPoints, nil
+	}
+	withdrawal := models.NewWithdrawal(user.ID, order.ID, sum)
+	withdrawal, err = s.WithdrawalRepository.Create(ctx, withdrawal)
+	if err != nil {
+		return InternalError, err
+	}
+	err = s.UserBalanceRepository.Update(ctx, userBalance)
+	if err != nil {
+		return InternalError, err
+	}
+
 	return "", nil
 }

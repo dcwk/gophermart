@@ -9,3 +9,12 @@ type Withdrawal struct {
 	Value     float64   `json:"value"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+func NewWithdrawal(userID int64, orderID int64, value float64) *Withdrawal {
+	return &Withdrawal{
+		UserID:    userID,
+		OrderID:   orderID,
+		Value:     value,
+		CreatedAt: time.Now(),
+	}
+}
