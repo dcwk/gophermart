@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
@@ -95,16 +96,27 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 
 func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber string, response *bonusSystemResponse) {
 	path := fmt.Sprintf("http://%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
-	client := resty.New()
-	resp, err := client.R().Get(path)
-	if err != nil {
-		s.Logger.Error(fmt.Sprintf("could not get order info from bonus system: %v", err))
-		return
-	}
 
-	if err := json.Unmarshal(resp.Body(), response); err != nil {
-		s.Logger.Error(fmt.Sprintf("could not unmarshal order info from bonus system: %v", err))
-		return
+	for i := 0; i < 5; i++ {
+		if i != 0 {
+			time.Sleep(1 * time.Second)
+		}
+
+		client := resty.New()
+		resp, err := client.R().Get(path)
+		if err != nil {
+			s.Logger.Error(fmt.Sprintf("could not get order info from bonus system: %v", err))
+			continue
+		}
+
+		if err := json.Unmarshal(resp.Body(), response); err != nil {
+			s.Logger.Error(fmt.Sprintf("could not unmarshal order info from bonus system: %v", err))
+			continue
+		}
+
+		if response.Status == models.Invalid || response.Status == models.Processed {
+			break
+		}
 	}
 
 	wg.Done()
