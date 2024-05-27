@@ -164,6 +164,8 @@ func (c *Container) GetWithdrawalsService() *services.GetWithdrawalsService {
 func (c *Container) LoadOrderService() *services.LoadOrderService {
 	if c.LoadOrderService_ == nil {
 		c.LoadOrderService_ = services.NewLoadOrderService(
+			c.conf.AccrualSystemAddress,
+			c.Logger(),
 			c.UserRepository(),
 			c.OrderRepository(),
 			c.AccrualRepository(),

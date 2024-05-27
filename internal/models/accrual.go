@@ -26,3 +26,8 @@ func NewAccrual(orderId int64) *Accrual {
 		UpdatedAt: time.Now(),
 	}
 }
+
+func (a *Accrual) UpdateStatus(status string, value float64) {
+	a.Status = status
+	a.Value = value
+}
