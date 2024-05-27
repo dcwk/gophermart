@@ -29,6 +29,7 @@ type Container struct {
 	GetOrdersService_      *services.GetOrdersService
 	GetUserBalanceService_ *services.GetUserBalanceService
 	GetWithdrawalsService_ *services.GetWithdrawalsService
+	LoadOrderService_      *services.LoadOrderService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -158,4 +159,17 @@ func (c *Container) GetWithdrawalsService() *services.GetWithdrawalsService {
 	}
 
 	return c.GetWithdrawalsService_
+}
+
+func (c *Container) LoadOrderService() *services.LoadOrderService {
+	if c.LoadOrderService_ == nil {
+		c.LoadOrderService_ = services.NewLoadOrderService(
+			c.UserRepository(),
+			c.OrderRepository(),
+			c.AccrualRepository(),
+			c.UserBalanceRepository(),
+		)
+	}
+
+	return c.LoadOrderService_
 }
