@@ -88,6 +88,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	go s.getOrderDataByNumber(wg, order.Number, &bonusSystemResponse)
 	wg.Wait()
 	if &bonusSystemResponse == nil {
+		accrual.UpdateStatus(models.Invalid, 0)
 		return "", fmt.Errorf("could not get order info from bonus system")
 	}
 

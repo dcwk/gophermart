@@ -23,6 +23,9 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
+	if err != nil {
+		app.Container.Logger().Error(err.Error())
+	}
 
 	switch code {
 	case services.OrderAlreadyExists:
