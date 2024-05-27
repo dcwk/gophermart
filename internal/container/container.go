@@ -24,12 +24,13 @@ type Container struct {
 	AccrualRepository_     repositories.AccrualRepository
 	WithdrawalRepository_  repositories.WithdrawalRepository
 
-	RegisterUserService_   *services.RegisterUserService
-	AuthUserService_       *services.AuthUserService
-	GetOrdersService_      *services.GetOrdersService
-	GetUserBalanceService_ *services.GetUserBalanceService
-	GetWithdrawalsService_ *services.GetWithdrawalsService
-	LoadOrderService_      *services.LoadOrderService
+	RegisterUserService_    *services.RegisterUserService
+	AuthUserService_        *services.AuthUserService
+	GetOrdersService_       *services.GetOrdersService
+	GetUserBalanceService_  *services.GetUserBalanceService
+	GetWithdrawalsService_  *services.GetWithdrawalsService
+	LoadOrderService_       *services.LoadOrderService
+	WithdrawRequestService_ *services.WithdrawRequestService
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -174,4 +175,18 @@ func (c *Container) LoadOrderService() *services.LoadOrderService {
 	}
 
 	return c.LoadOrderService_
+}
+
+func (c *Container) WithdrawRequestService() *services.WithdrawRequestService {
+	if c.WithdrawRequestService_ == nil {
+		c.WithdrawRequestService_ = services.NewWithdrawRequestService(
+			c.Logger(),
+			c.UserRepository(),
+			c.UserBalanceRepository(),
+			c.OrderRepository(),
+			c.WithdrawalRepository(),
+		)
+	}
+
+	return c.WithdrawRequestService_
 }
