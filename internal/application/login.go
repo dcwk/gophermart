@@ -10,10 +10,6 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-type LoginResponse struct {
-	Token string `json:"token"`
-}
-
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	var request LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -34,13 +30,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := LoginResponse{Token: token}
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		app.Container.Logger().Error(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
+	w.Header().Set("Authorization", "Bearer "+token)
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	return
