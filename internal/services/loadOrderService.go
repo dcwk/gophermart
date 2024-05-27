@@ -23,5 +23,6 @@ func NewLoadOrderService(
 	}
 }
 
-func (s *LoadOrderService) Handle() {
+func (s *LoadOrderService) Handle(orderNumber string, userID int64) error {
+	return nil
 }
