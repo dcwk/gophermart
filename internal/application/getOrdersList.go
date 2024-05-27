@@ -8,7 +8,7 @@ import (
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
-type OrderResponse struct {
+type orderResponse struct {
 	Number     string    `json:"number"`
 	Status     string    `json:"status"`
 	Accrual    float64   `json:"accrual"`
@@ -28,9 +28,9 @@ func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := make([]*OrderResponse, len(orders))
+	resp := make([]*orderResponse, len(orders))
 	for i, order := range orders {
-		resp[i] = &OrderResponse{
+		resp[i] = &orderResponse{
 			Number:     order.Number,
 			Status:     order.Status,
 			Accrual:    order.Accrual,

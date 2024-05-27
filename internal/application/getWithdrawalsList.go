@@ -3,13 +3,15 @@ package application
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
-	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
-type WithdrawalsListResponse struct {
-	WithdrawalsList []*models.Withdrawal `json:"withdrawals"`
+type withdrawResponse struct {
+	Order       string    `json:"order"`
+	Sum         float64   `json:"sum"`
+	ProcessedAt time.Time `json:"processed_at"`
 }
 
 func (app *Application) GetWithdrawalsList(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +27,14 @@ func (app *Application) GetWithdrawalsList(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	resp := WithdrawalsListResponse{WithdrawalsList: withdrawals}
+	resp := make([]*withdrawResponse, len(withdrawals))
+	for i, withdrawal := range withdrawals {
+		resp[i] = &withdrawResponse{
+			Order:       withdrawal.OrderNumber,
+			Sum:         withdrawal.Value,
+			ProcessedAt: withdrawal.CreatedAt,
+		}
+	}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		app.Container.Logger().Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)

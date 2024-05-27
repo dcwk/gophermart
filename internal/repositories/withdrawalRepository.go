@@ -39,7 +39,13 @@ func (r *withdrawalRepository) Create(ctx context.Context, withdrawal *models.Wi
 }
 
 func (r *withdrawalRepository) FindUserWithdrawals(ctx context.Context, userID int64) ([]*models.Withdrawal, error) {
-	rows, err := r.DB.Query(ctx, `SELECT id, user_id, order_id, value, created_at FROM withdrawal WHERE user_id=$1`, userID)
+	rows, err := r.DB.Query(
+		ctx, `SELECT w.id, w.user_id, w.order_id, o.number, w.value, w.created_at 
+					FROM withdrawal AS w 
+					INNER JOIN "order" AS o ON o.id=w.order_id 
+						WHERE w.user_id=$1`,
+		userID,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +54,14 @@ func (r *withdrawalRepository) FindUserWithdrawals(ctx context.Context, userID i
 	var withdrawals []*models.Withdrawal
 	for rows.Next() {
 		withdrawal := models.Withdrawal{}
-		err := rows.Scan(&withdrawal.ID, &withdrawal.UserID, &withdrawal.OrderID, &withdrawal.Value, &withdrawal.CreatedAt)
+		err := rows.Scan(
+			&withdrawal.ID,
+			&withdrawal.UserID,
+			&withdrawal.OrderID,
+			&withdrawal.OrderNumber,
+			&withdrawal.Value,
+			&withdrawal.CreatedAt,
+		)
 		if err != nil {
 			return nil, err
 		}
