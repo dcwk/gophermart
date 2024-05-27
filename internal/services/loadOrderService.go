@@ -104,7 +104,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	if err != nil {
 		return "", fmt.Errorf("could not get user balance: %v", err)
 	}
-	userBalance.UpdateAccrual(accrual.Value)
+	userBalance.DoAccrual(accrual.Value)
 	err = s.UserBalanceRepository.Update(ctx, userBalance)
 	if err != nil {
 		return "", fmt.Errorf("could not update user balance: %v", err)
