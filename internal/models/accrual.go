@@ -19,8 +19,10 @@ type Accrual struct {
 
 func NewAccrual(orderId int64) *Accrual {
 	return &Accrual{
-		OrderID: orderId,
-		Status:  Processing,
-		Value:   0,
+		OrderID:   orderId,
+		Status:    Processing,
+		Value:     0,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 }

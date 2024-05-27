@@ -8,3 +8,11 @@ type Order struct {
 	Number    string    `json:number`
 	CreatedAt time.Time `json:created_at`
 }
+
+func NewOrder(userID int64, number string) *Order {
+	return &Order{
+		UserID:    userID,
+		Number:    number,
+		CreatedAt: time.Now(),
+	}
+}
