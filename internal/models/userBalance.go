@@ -14,6 +14,15 @@ func NewUserBalance(userId int64) *UserBalance {
 	}
 }
 
-func (userBalance *UserBalance) UpdateAccrual(value float64) {
+func (userBalance *UserBalance) DoAccrual(value float64) {
 	userBalance.Accrual += value
+}
+
+func (userBalance *UserBalance) DoWithdrawal(value float64) {
+	userBalance.Accrual -= value
+	userBalance.Withdrawal += value
+}
+
+func (userBalance *UserBalance) IsWithdrawPossible(value float64) bool {
+	return userBalance.Accrual >= value
 }
