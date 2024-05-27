@@ -48,7 +48,7 @@ func (r *withdrawalRepository) FindUserWithdrawals(ctx context.Context, userID i
 	var withdrawals []*models.Withdrawal
 	for rows.Next() {
 		withdrawal := models.Withdrawal{}
-		err := rows.Scan(&withdrawal.ID, &withdrawal.UserID, &withdrawal.OrderID, &withdrawal.Value)
+		err := rows.Scan(&withdrawal.ID, &withdrawal.UserID, &withdrawal.OrderID, &withdrawal.Value, &withdrawal.CreatedAt)
 		if err != nil {
 			return nil, err
 		}

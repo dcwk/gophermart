@@ -43,7 +43,7 @@ func (r *userBalanceRepository) Create(ctx context.Context, userBalance *models.
 func (r *userBalanceRepository) Update(ctx context.Context, userBalance *models.UserBalance) error {
 	_, err := r.DB.Query(
 		ctx,
-		`UPDATE user_balance SET accrual = $2, withdrawal = $3 WHERE user_id = $1`,
+		`UPDATE user_balance SET accrual = $1, withdrawal = $2 WHERE user_id = $3`,
 		userBalance.Accrual,
 		userBalance.Withdrawal,
 		userBalance.UserId,

@@ -9,7 +9,7 @@ import (
 )
 
 type withdrawRequest struct {
-	OrderNumber string  `json:"orderNumber"`
+	OrderNumber string  `json:"order"`
 	Sum         float64 `json:"sum"`
 }
 

@@ -71,6 +71,7 @@ func (s *WithdrawRequestService) Handle(
 	if err != nil {
 		return InternalError, err
 	}
+	userBalance.DoWithdrawal(withdrawal.Value)
 	err = s.UserBalanceRepository.Update(ctx, userBalance)
 	if err != nil {
 		return InternalError, err
