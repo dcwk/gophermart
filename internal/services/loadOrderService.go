@@ -65,7 +65,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 
 	wg.Add(1)
 	var bonusSystemResponse bonusSystemResponse
-	go s.getOrderDataByNumber(order.Number, &bonusSystemResponse)
+	go s.getOrderDataByNumber(wg, order.Number, &bonusSystemResponse)
 	wg.Wait()
 	if &bonusSystemResponse == nil {
 		return fmt.Errorf("could not get order info from bonus system")
@@ -93,7 +93,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	return nil
 }
 
-func (s *LoadOrderService) getOrderDataByNumber(orderNumber string, response *bonusSystemResponse) {
+func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber string, response *bonusSystemResponse) {
 	path := fmt.Sprintf("http://%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
 	client := resty.New()
 	resp, err := client.R().Get(path)
@@ -107,5 +107,6 @@ func (s *LoadOrderService) getOrderDataByNumber(orderNumber string, response *bo
 		return
 	}
 
+	wg.Done()
 	return
 }
