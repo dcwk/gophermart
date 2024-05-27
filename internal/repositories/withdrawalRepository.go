@@ -8,6 +8,7 @@ import (
 )
 
 type WithdrawalRepository interface {
+	Create(ctx context.Context, withdrawal *models.Withdrawal) (*models.Withdrawal, error)
 	FindUserWithdrawals(ctx context.Context, userID int64) ([]*models.Withdrawal, error)
 }
 
@@ -19,6 +20,22 @@ func NewWithdrawalRepository(db *pgxpool.Pool) WithdrawalRepository {
 	return &withdrawalRepository{
 		DB: db,
 	}
+}
+
+func (r *withdrawalRepository) Create(ctx context.Context, withdrawal *models.Withdrawal) (*models.Withdrawal, error) {
+	row := r.DB.QueryRow(
+		ctx,
+		`INSERT INTO withdrawal (user_id, order_id, value, created_at) VALUES ($1, $2, $3, NOW()) RETURNING ("id")`,
+		withdrawal.UserID,
+		withdrawal.OrderID,
+		withdrawal.Value,
+	)
+	err := row.Scan(&withdrawal.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return withdrawal, nil
 }
 
 func (r *withdrawalRepository) FindUserWithdrawals(ctx context.Context, userID int64) ([]*models.Withdrawal, error) {

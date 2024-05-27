@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	Create(ctx context.Context, user *models.User) (*models.User, error)
 	GetUserByID(ctx context.Context, ID int64) (*models.User, error)
 	GetUserByLogin(ctx context.Context, login string) (*models.User, error)
 }
@@ -23,7 +23,7 @@ func NewUserRepository(db *pgxpool.Pool) UserRepository {
 	}
 }
 
-func (r *userRepository) CreateUser(ctx context.Context, user *models.User) (*models.User, error) {
+func (r *userRepository) Create(ctx context.Context, user *models.User) (*models.User, error) {
 	row := r.DB.QueryRow(
 		ctx,
 		`INSERT INTO "user" (login, password, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING ("id")`,
