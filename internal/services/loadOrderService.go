@@ -119,7 +119,7 @@ func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber 
 
 	for i := 0; i < 5; i++ {
 		if i != 0 {
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 		}
 
 		client := resty.New()
