@@ -21,6 +21,7 @@ type Container struct {
 	UserRepository_        repositories.UserRepository
 	OrderRepository_       repositories.OrderRepository
 	UserBalanceRepository_ repositories.UserBalanceRepository
+	AccrualRepository_     repositories.AccrualRepository
 	WithdrawalRepository_  repositories.WithdrawalRepository
 
 	RegisterUserService_   *services.RegisterUserService
@@ -101,6 +102,14 @@ func (c *Container) UserBalanceRepository() repositories.UserBalanceRepository {
 	}
 
 	return c.UserBalanceRepository_
+}
+
+func (c *Container) AccrualRepository() repositories.AccrualRepository {
+	if c.AccrualRepository_ == nil {
+		c.AccrualRepository_ = repositories.NewAccrualRepository(c.DB())
+	}
+
+	return c.AccrualRepository_
 }
 
 func (c *Container) WithdrawalRepository() repositories.WithdrawalRepository {

@@ -3,10 +3,10 @@ package models
 import "time"
 
 const (
-	NEW        = "NEW"
-	PROCESSING = "PROCESSING"
-	INVALID    = "INVALID"
-	PROCESSED  = "PROCESSED"
+	New        = "NEW"
+	Processing = "PROCESSING"
+	Invalid    = "INVALID"
+	Processed  = "PROCESSED"
 )
 
 type Accrual struct {
@@ -20,7 +20,7 @@ type Accrual struct {
 func NewAccrual(orderId int64) *Accrual {
 	return &Accrual{
 		OrderID: orderId,
-		Status:  PROCESSING,
+		Status:  Processing,
 		Value:   0,
 	}
 }
