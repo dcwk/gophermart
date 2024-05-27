@@ -6,6 +6,7 @@ import (
 	"github.com/dcwk/gophermart/internal/config"
 	"github.com/dcwk/gophermart/internal/container"
 	"github.com/dcwk/gophermart/internal/utils/middleware"
+	"github.com/dcwk/gophermart/migrations"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -14,6 +15,11 @@ type Application struct {
 }
 
 func Run(conf *config.ServerConf) {
+	err := migrations.RunMigrations(conf.DatabaseDSN)
+	if err != nil {
+		panic(err)
+	}
+
 	app := Application{
 		Container: container.NewContainer(conf),
 	}
