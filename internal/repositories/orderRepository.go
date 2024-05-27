@@ -39,7 +39,13 @@ func (r *orderRepository) Create(ctx context.Context, order *models.Order) (*mod
 }
 
 func (r *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error) {
-	rows, err := r.DB.Query(ctx, `SELECT id, user_id, number, created_at FROM "order" WHERE user_id=$1`, userID)
+	rows, err := r.DB.Query(
+		ctx,
+		`SELECT o.id, o.user_id, o.number, a.status, a.value, o.created_at FROM "order" AS o 
+				INNER JOIN "accrual" AS a ON o.id = a.order_id
+			   WHERE o.user_id=$1`,
+		userID,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +54,14 @@ func (r *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*
 	var orders []*models.Order
 	for rows.Next() {
 		order := models.Order{}
-		err := rows.Scan(&order.ID, &order.UserID, &order.Number, &order.CreatedAt)
+		err := rows.Scan(
+			&order.ID,
+			&order.UserID,
+			&order.Number,
+			&order.Status,
+			&order.Accrual,
+			&order.CreatedAt,
+		)
 		if err != nil {
 			return nil, err
 		}

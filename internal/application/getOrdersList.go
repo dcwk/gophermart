@@ -3,13 +3,20 @@ package application
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
-	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
 type OrdersListResponse struct {
-	OrdersList []*models.Order `json:"orders"`
+	OrdersList []*OrderResponse `json:"orders"`
+}
+
+type OrderResponse struct {
+	Number     string    `json:"number"`
+	Status     string    `json:"status"`
+	Accrual    float64   `json:"accrual"`
+	UploadedAt time.Time `json:"uploaded_at"`
 }
 
 func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +32,15 @@ func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := OrdersListResponse{OrdersList: orders}
+	resp := OrdersListResponse{OrdersList: make([]*OrderResponse, len(orders))}
+	for i, order := range orders {
+		resp.OrdersList[i] = &OrderResponse{
+			Number:     order.Number,
+			Status:     order.Status,
+			Accrual:    order.Accrual,
+			UploadedAt: order.CreatedAt,
+		}
+	}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		app.Container.Logger().Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
