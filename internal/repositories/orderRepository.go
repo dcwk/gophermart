@@ -9,6 +9,7 @@ import (
 
 type OrderRepository interface {
 	Create(ctx context.Context, order *models.Order) (*models.Order, error)
+	FindOrderByNumber(ctx context.Context, orderNumber string) (*models.Order, error)
 	FindUserOrders(ctx context.Context, userID int64) ([]*models.Order, error)
 }
 
@@ -56,4 +57,19 @@ func (r *orderRepository) FindUserOrders(ctx context.Context, userID int64) ([]*
 	}
 
 	return orders, nil
+}
+
+func (r *orderRepository) FindOrderByNumber(ctx context.Context, orderNumber string) (*models.Order, error) {
+	var order models.Order
+	row := r.DB.QueryRow(
+		ctx,
+		`SELECT id, user_id, number, created_at FROM "order" WHERE number=$1`,
+		orderNumber,
+	)
+	err := row.Scan(&order.ID, &order.UserID, &order.Number, &order.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return &order, nil
 }

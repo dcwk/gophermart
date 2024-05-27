@@ -13,6 +13,14 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	NotFound           = "NotFound"
+	OrderAlreadyExists = "OrderAlreadyExists"
+	//IncorrectOrderNumber = "IncorrectOrderNumber"
+	ForbiddenOrder = "ForbiddenOrder"
+	InternalError  = "InternalError"
+)
+
 type LoadOrderService struct {
 	AccrualSystemAddress  string
 	Logger                *zap.Logger
@@ -46,22 +54,30 @@ func NewLoadOrderService(
 	}
 }
 
-func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userID int64) error {
+func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userID int64) (string, error) {
 	wg := new(sync.WaitGroup)
 	user, err := s.UserRepository.GetUserByID(ctx, userID)
 	if err != nil {
-		return fmt.Errorf("user %d not found", userID)
+		s.Logger.Error(fmt.Sprintf("user %d not found", userID))
+		return NotFound, nil
+	}
+
+	existingOrder, _ := s.OrderRepository.FindOrderByNumber(ctx, orderNumber)
+	if existingOrder != nil && existingOrder.UserID == user.ID {
+		return OrderAlreadyExists, nil
+	} else if existingOrder != nil && existingOrder.UserID != user.ID {
+		return ForbiddenOrder, nil
 	}
 
 	order := models.NewOrder(user.ID, orderNumber)
 	order, err = s.OrderRepository.Create(ctx, order)
 	if err != nil {
-		return fmt.Errorf("could not create order: %v", err)
+		return InternalError, fmt.Errorf("could not create order: %v", err)
 	}
 	accrual := models.NewAccrual(order.ID)
 	accrual, err = s.AccrualRepository.Create(ctx, accrual)
 	if err != nil {
-		return fmt.Errorf("could not create accrual: %v", err)
+		return "", fmt.Errorf("could not create accrual: %v", err)
 	}
 
 	wg.Add(1)
@@ -69,29 +85,29 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	go s.getOrderDataByNumber(wg, order.Number, &bonusSystemResponse)
 	wg.Wait()
 	if &bonusSystemResponse == nil {
-		return fmt.Errorf("could not get order info from bonus system")
+		return "", fmt.Errorf("could not get order info from bonus system")
 	}
 
 	accrual.UpdateStatus(bonusSystemResponse.Status, bonusSystemResponse.Accrual)
 	accrual, err = s.AccrualRepository.Update(ctx, accrual)
 	if err != nil {
-		return fmt.Errorf("could not update accrual: %v", err)
+		return "", fmt.Errorf("could not update accrual: %v", err)
 	}
 	if accrual.Value == 0 {
-		return nil
+		return "", nil
 	}
 
 	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, true)
 	if err != nil {
-		return fmt.Errorf("could not get user balance: %v", err)
+		return "", fmt.Errorf("could not get user balance: %v", err)
 	}
 	userBalance.UpdateAccrual(accrual.Value)
 	err = s.UserBalanceRepository.Update(ctx, userBalance)
 	if err != nil {
-		return fmt.Errorf("could not update user balance: %v", err)
+		return "", fmt.Errorf("could not update user balance: %v", err)
 	}
 
-	return nil
+	return "", nil
 }
 
 func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber string, response *bonusSystemResponse) {
