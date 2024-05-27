@@ -1,14 +1,14 @@
 package models
 
 type UserBalance struct {
-	UserId     int64   `json:"user_id"`
+	UserID     int64   `json:"user_id"`
 	Accrual    float64 `json:"accrual"`
 	Withdrawal float64 `json:"withdrawal"`
 }
 
 func NewUserBalance(userID int64) *UserBalance {
 	return &UserBalance{
-		UserId:     userID,
+		UserID:     userID,
 		Accrual:    0,
 		Withdrawal: 0,
 	}

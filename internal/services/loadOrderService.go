@@ -144,5 +144,4 @@ func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber 
 	}
 
 	wg.Done()
-	return
 }

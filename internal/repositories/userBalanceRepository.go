@@ -29,7 +29,7 @@ func (r *userBalanceRepository) Create(ctx context.Context, userBalance *models.
 	_, err := r.DB.Query(
 		ctx,
 		`INSERT INTO user_balance (user_id, accrual, withdrawal) VALUES ($1, $2, $3)`,
-		userBalance.UserId,
+		userBalance.UserID,
 		userBalance.Accrual,
 		userBalance.Withdrawal,
 	)
@@ -46,7 +46,7 @@ func (r *userBalanceRepository) Update(ctx context.Context, userBalance *models.
 		`UPDATE user_balance SET accrual = $1, withdrawal = $2 WHERE user_id = $3`,
 		userBalance.Accrual,
 		userBalance.Withdrawal,
-		userBalance.UserId,
+		userBalance.UserID,
 	)
 	if err != nil {
 		return err
@@ -75,7 +75,7 @@ func (r *userBalanceRepository) GetUserBalanceByID(ctx context.Context, userID i
 		)
 	}
 
-	err := row.Scan(&userBalance.UserId, &userBalance.Accrual, &userBalance.Withdrawal)
+	err := row.Scan(&userBalance.UserID, &userBalance.Accrual, &userBalance.Withdrawal)
 	if err != nil {
 		return nil, err
 	}
