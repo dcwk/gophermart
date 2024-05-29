@@ -93,6 +93,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	wg.Wait()
 	if bonusSystemResponse.Status == models.New {
 		accrual.UpdateStatus(models.Invalid, 0)
+		accrual, err = s.AccrualRepository.Update(ctx, accrual)
 		return "", fmt.Errorf("could not get order info from bonus system")
 	}
 
@@ -123,7 +124,7 @@ func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber 
 
 	for i := 0; i < 5; i++ {
 		if i != 0 {
-			time.Sleep(2 * time.Second)
+			time.Sleep(200 * time.Millisecond)
 		}
 
 		client := resty.New()
