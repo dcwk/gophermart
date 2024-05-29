@@ -51,6 +51,9 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 	case services.IncorrectOrderNumber:
 		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
+		if err != nil {
+			app.Container.Logger().Error(err.Error())
+		}
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
