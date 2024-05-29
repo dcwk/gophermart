@@ -28,6 +28,8 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch code {
+	case services.InvalidOrder:
+		w.WriteHeader(http.StatusAccepted)
 	case services.OrderAlreadyExists:
 		w.WriteHeader(http.StatusOK)
 	case services.ForbiddenOrder:

@@ -19,6 +19,7 @@ const (
 	IncorrectOrderNumber = "IncorrectOrderNumber"
 	ForbiddenOrder       = "ForbiddenOrder"
 	InternalError        = "InternalError"
+	InvalidOrder         = "InvalidOrder"
 )
 
 type LoadOrderService struct {
@@ -94,7 +95,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 	if bonusSystemResponse.Status == models.New {
 		accrual.UpdateStatus(models.Invalid, 0)
 		accrual, err = s.AccrualRepository.Update(ctx, accrual)
-		return "", fmt.Errorf("could not get order info from bonus system")
+		return InvalidOrder, fmt.Errorf("could not get order info from bonus system")
 	}
 
 	accrual.UpdateStatus(bonusSystemResponse.Status, bonusSystemResponse.Accrual)
