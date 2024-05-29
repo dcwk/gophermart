@@ -139,6 +139,7 @@ func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber 
 			continue
 		}
 
+		s.Logger.Info(fmt.Sprintf("order info from bonus system: %v", response))
 		if response.Status == models.Invalid || response.Status == models.Processed {
 			break
 		}
