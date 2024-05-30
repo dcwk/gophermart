@@ -121,9 +121,9 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderNumber string, userI
 func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber string, response *bonusSystemResponse) {
 	path := fmt.Sprintf("http://%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 10; i++ {
 		if i != 0 {
-			time.Sleep(200 * time.Millisecond)
+			time.Sleep(1 * time.Second)
 		}
 
 		client := resty.New().SetTimeout(10 * time.Second)
