@@ -38,6 +38,8 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 	switch code {
 	case services.NotEnoughPoints:
 		w.WriteHeader(http.StatusPaymentRequired)
+	case services.NotFound:
+		w.WriteHeader(http.StatusNotFound)
 	case services.ForbiddenOrder:
 		w.WriteHeader(http.StatusConflict)
 	case services.IncorrectOrderNumber:

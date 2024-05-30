@@ -13,6 +13,8 @@ type Claims struct {
 	UserID int64
 }
 
+type UserIDKey string
+
 // TODO: добавить возможность управлять протуханием из конфига
 const TokenExp = time.Hour * 3
 
@@ -58,5 +60,6 @@ func GetUserID(tokenString string) int64 {
 }
 
 func GetUserIDFromCtx(ctx context.Context) int64 {
-	return ctx.Value("userId").(int64)
+	userKey := UserIDKey("userID")
+	return ctx.Value(userKey).(int64)
 }

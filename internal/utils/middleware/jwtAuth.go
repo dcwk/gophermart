@@ -17,7 +17,7 @@ func JwtAuth(next http.Handler) http.Handler {
 			return
 		}
 
-		userKey := "userId"
+		userKey := auth.UserIDKey("userID")
 		ctx := context.WithValue(r.Context(), userKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

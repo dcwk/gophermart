@@ -46,7 +46,7 @@ func RequestMiddleware(logger *zap.Logger) func(next http.Handler) http.Handler 
 				return
 			}
 
-			logger.Info(fmt.Sprintf("request body: %v", string(requestCopy.Bytes())))
+			logger.Info(fmt.Sprintf("request body: %v", requestCopy.String()))
 
 			r.Body = io.NopCloser(&requestCopy)
 			next.ServeHTTP(&loggingWriter, r)
