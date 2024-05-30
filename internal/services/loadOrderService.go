@@ -24,12 +24,12 @@ func NewLoadOrderService(accrualSystemAddress string, logger *zap.Logger) *LoadO
 }
 
 func (s *LoadOrderService) Handle(ctx context.Context, orderChannel chan models.AccrualOrder, orderNumber string) {
-	path := fmt.Sprintf("http://%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
+	path := fmt.Sprintf("%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
 	var accrualOrder models.AccrualOrder
 
 	for i := 0; i < 10; i++ {
 		if i != 0 {
-			time.Sleep(2 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 
 		client := resty.New().SetTimeout(10 * time.Second)

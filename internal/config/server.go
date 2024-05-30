@@ -20,7 +20,7 @@ func NewServerConf() (*ServerConf, error) {
 	flag.StringVar(&conf.LogLevel, "l", "info", "log level")
 	flag.StringVar(&conf.RunAddress, "a", "localhost:8081", "server address")
 	flag.StringVar(&conf.DatabaseDSN, "d", "postgres://postgres:123456@localhost:5432/gophermart", "database dsn")
-	flag.StringVar(&conf.AccrualSystemAddress, "r", "localhost:8080", "accrual system address")
+	flag.StringVar(&conf.AccrualSystemAddress, "r", "http://localhost:8080", "accrual system address")
 	flag.IntVar(&conf.DatabaseMaxConnections, "mc", 100, "maximum number of concurrent connections")
 	err := env.Parse(conf)
 	if err != nil {
