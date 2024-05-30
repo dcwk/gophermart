@@ -47,11 +47,7 @@ func (s *WithdrawRequestService) Handle(
 		return NotFound, nil
 	}
 
-	order := models.NewOrder(user.ID, orderNumber)
-	if !order.IsValid() {
-		return IncorrectOrderNumber, nil
-	}
-	order, err = s.OrderRepository.FindOrderByNumber(ctx, order.Number)
+	order, err := s.OrderRepository.FindOrderByNumber(ctx, orderNumber)
 	if err != nil {
 		return InternalError, err
 	}
