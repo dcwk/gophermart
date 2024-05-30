@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/dcwk/gophermart/branch/step2/graph/badge.svg?token=7KZV41NEJH)](https://codecov.io/gh/dcwk/gophermart)
+
 ## Event stroming накопительная система лояльности «Гофермарт»
 ![img_1.png](img_1.png)<br/>
 https://miro.com/app/board/uXjVKJX4m7E=/?share_link_id=670000264537
