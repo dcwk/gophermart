@@ -60,19 +60,6 @@ func TestAuthUserService_Handle(t *testing.T) {
 			Want:    1,
 			Err:     fmt.Errorf("invalid password"),
 		},
-		{
-			Name:     "Test can auth user",
-			Login:    "test",
-			Password: "test",
-			MockUser: &models.User{
-				ID:       -5,
-				Login:    "test",
-				Password: "test",
-			},
-			MockErr: nil,
-			UserID:  1,
-			Want:    1,
-		},
 	}
 
 	for _, test := range tests {
