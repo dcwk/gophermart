@@ -2,7 +2,6 @@ package application
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/dcwk/gophermart/internal/services"
@@ -24,13 +23,6 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	app.Container.Logger().Info(
-		fmt.Sprintf(
-			"withdraw request received for order %s with sum %f",
-			request.OrderNumber,
-			request.Sum,
-		),
-	)
 	userID := auth.GetUserIDFromCtx(r.Context())
 	code, err := app.Container.WithdrawRequestService().Handle(
 		r.Context(),
