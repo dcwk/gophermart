@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/dcwk/gophermart/internal/models"
@@ -16,6 +17,8 @@ func TestAuthUserService_Handle(t *testing.T) {
 		Name     string
 		Login    string
 		Password string
+		MockUser *models.User
+		MockErr  error
 		UserID   int64
 		Want     int64
 		Err      error
@@ -24,8 +27,51 @@ func TestAuthUserService_Handle(t *testing.T) {
 			Name:     "Test can auth user",
 			Login:    "test",
 			Password: "test",
-			UserID:   1,
+			MockUser: &models.User{
+				ID:       1,
+				Login:    "test",
+				Password: "test",
+			},
+			MockErr: nil,
+			UserID:  1,
+			Want:    1,
+		},
+		{
+			Name:     "Test fail user not found",
+			Login:    "test",
+			Password: "test",
+			MockUser: nil,
+			MockErr:  fmt.Errorf("no rows"),
+			UserID:   0,
 			Want:     1,
+			Err:      fmt.Errorf("failed to find user by login: no rows"),
+		},
+		{
+			Name:     "Test fail invalid password",
+			Login:    "test",
+			Password: "test1",
+			MockUser: &models.User{
+				ID:       1,
+				Login:    "test",
+				Password: "test",
+			},
+			MockErr: nil,
+			UserID:  0,
+			Want:    1,
+			Err:     fmt.Errorf("invalid password"),
+		},
+		{
+			Name:     "Test can auth user",
+			Login:    "test",
+			Password: "test",
+			MockUser: &models.User{
+				ID:       -5,
+				Login:    "test",
+				Password: "test",
+			},
+			MockErr: nil,
+			UserID:  1,
+			Want:    1,
 		},
 	}
 
@@ -37,23 +83,20 @@ func TestAuthUserService_Handle(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 			userRepository := mock_repositories.NewMockUserRepository(ctrl)
-			user := models.User{
-				ID:       test.UserID,
-				Login:    test.Login,
-				Password: test.Password,
+			if test.MockUser != nil {
+				err = test.MockUser.HashPassword()
+				assert.NoError(t, err)
 			}
-			err = user.HashPassword()
-			assert.NoError(t, err)
-			userRepository.EXPECT().GetUserByLogin(gomock.Any(), gomock.Any()).Return(&user, nil)
+			userRepository.EXPECT().GetUserByLogin(gomock.Any(), gomock.Any()).Return(test.MockUser, test.MockErr)
 			service := NewAuthService(userRepository)
 
 			token, err := service.Handle(context.Background(), test.Login, test.Password)
 
-			assert.Equal(t, test.Want, auth.GetUserID(token))
 			if test.Err != nil {
-				assert.Equal(t, test.Err, err)
+				assert.Error(t, test.Err, err)
 			} else {
 				assert.NoError(t, err)
+				assert.Equal(t, test.Want, auth.GetUserID(token))
 			}
 		})
 	}
