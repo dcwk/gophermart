@@ -52,7 +52,7 @@ func (s *WithdrawRequestService) Handle(
 		return InternalError, err
 	}
 	if order.UserID != user.ID {
-		return ForbiddenOrder, nil
+		return NotFound, nil
 	}
 
 	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, true)
