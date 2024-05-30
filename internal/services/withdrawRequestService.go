@@ -47,12 +47,13 @@ func (s *WithdrawRequestService) Handle(
 		return NotFound, nil
 	}
 
-	order, err := s.OrderRepository.FindOrderByNumber(ctx, orderNumber)
+	order := models.NewOrder(user.ID, orderNumber)
+	if !order.IsValid() {
+		return IncorrectOrderNumber, nil
+	}
+	order, err = s.OrderRepository.Create(ctx, order)
 	if err != nil {
 		return InternalError, err
-	}
-	if order.UserID != user.ID {
-		return NotFound, nil
 	}
 
 	userBalance, err := s.UserBalanceRepository.GetUserBalanceByID(ctx, user.ID, true)
