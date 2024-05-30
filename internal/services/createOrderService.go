@@ -76,6 +76,9 @@ func (s *CreateOrderService) Handle(
 	}
 
 	accrualOrder := <-orderChannel
+	if accrualOrder.Status == "" {
+		return InternalError, fmt.Errorf("empty response from accrual service")
+	}
 	accrual.UpdateStatus(accrualOrder.Status, accrualOrder.Accrual)
 	accrual, err = s.AccrualRepository.Update(ctx, accrual)
 	if err != nil {

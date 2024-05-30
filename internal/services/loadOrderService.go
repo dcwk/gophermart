@@ -29,7 +29,7 @@ func (s *LoadOrderService) Handle(ctx context.Context, orderChannel chan models.
 
 	for i := 0; i < 10; i++ {
 		if i != 0 {
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 		}
 
 		client := resty.New().SetTimeout(10 * time.Second)
