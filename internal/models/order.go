@@ -6,12 +6,12 @@ import (
 )
 
 type Order struct {
-	ID        int64     `json:id`
-	UserID    int64     `json:user_id`
-	Number    string    `json:number`
-	Status    string    `json:status`
-	Accrual   float64   `json:accepted`
-	CreatedAt time.Time `json:created_at`
+	ID        int64     `json:"id"`
+	UserID    int64     `json:"user_id"`
+	Number    string    `json:"number"`
+	Status    string    `json:"status"`
+	Accrual   float64   `json:"accepted"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func NewOrder(userID int64, number string) *Order {

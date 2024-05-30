@@ -29,6 +29,7 @@ type Container struct {
 	GetOrdersService_       *services.GetOrdersService
 	GetUserBalanceService_  *services.GetUserBalanceService
 	GetWithdrawalsService_  *services.GetWithdrawalsService
+	CreateOrderService_     *services.CreateOrderService
 	LoadOrderService_       *services.LoadOrderService
 	WithdrawRequestService_ *services.WithdrawRequestService
 }
@@ -162,15 +163,25 @@ func (c *Container) GetWithdrawalsService() *services.GetWithdrawalsService {
 	return c.GetWithdrawalsService_
 }
 
-func (c *Container) LoadOrderService() *services.LoadOrderService {
-	if c.LoadOrderService_ == nil {
-		c.LoadOrderService_ = services.NewLoadOrderService(
-			c.conf.AccrualSystemAddress,
+func (c *Container) CreateOrderService() *services.CreateOrderService {
+	if c.CreateOrderService_ == nil {
+		c.CreateOrderService_ = services.NewCreateOrderService(
 			c.Logger(),
 			c.UserRepository(),
 			c.OrderRepository(),
 			c.AccrualRepository(),
 			c.UserBalanceRepository(),
+		)
+	}
+
+	return c.CreateOrderService_
+}
+
+func (c *Container) LoadOrderService() *services.LoadOrderService {
+	if c.LoadOrderService_ == nil {
+		c.LoadOrderService_ = services.NewLoadOrderService(
+			c.conf.AccrualSystemAddress,
+			c.Logger(),
 		)
 	}
 
