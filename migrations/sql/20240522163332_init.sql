@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS "order"
 CREATE TABLE IF NOT EXISTS "user_balance"
 (
     user_id bigint PRIMARY KEY NOT NULL,
-    accrual double precision NOT NULL,
-    withdrawal double precision NOT NULL
+    accrual numeric(20, 2) NOT NULL,
+    withdrawal numeric(20, 2) NOT NULL
 );
 
 CREATE TYPE order_status AS ENUM (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "accrual"
 (
     order_id bigint PRIMARY KEY NOT NULL,
     status order_status NOT NULL DEFAULT 'NEW',
-    "value" double precision NOT NULL,
+    "value" numeric(20, 2) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "withdrawal"
     id SERIAL PRIMARY KEY NOT NULL,
     user_id bigint NOT NULL,
     order_id bigint NOT NULL,
-    "value" double precision NOT NULL,
+    "value" numeric(20, 2) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     CONSTRAINT fk_user_withdrawals FOREIGN KEY(user_id) REFERENCES "user"(id),
     CONSTRAINT fk_order_withdrawals FOREIGN KEY(order_id) REFERENCES "order"(id)
