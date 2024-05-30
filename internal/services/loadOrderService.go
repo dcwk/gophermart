@@ -126,8 +126,9 @@ func (s *LoadOrderService) getOrderDataByNumber(wg *sync.WaitGroup, orderNumber 
 			time.Sleep(200 * time.Millisecond)
 		}
 
-		client := resty.New()
-		resp, err := client.R().Get(path)
+		client := resty.New().SetTimeout(10 * time.Second)
+		resp, err := client.R().
+			Get(path)
 		if err != nil {
 			s.Logger.Error(fmt.Sprintf("could not get order info from bonus system: %v", err))
 			continue
