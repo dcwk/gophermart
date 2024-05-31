@@ -10,7 +10,7 @@ import (
 
 	"github.com/dcwk/gophermart/internal/config"
 	"github.com/dcwk/gophermart/internal/repositories"
-	"github.com/dcwk/gophermart/internal/use_case"
+	"github.com/dcwk/gophermart/internal/usecase"
 )
 
 type Container struct {
@@ -24,14 +24,14 @@ type Container struct {
 	AccrualRepository_     repositories.AccrualRepository
 	WithdrawalRepository_  repositories.WithdrawalRepository
 
-	RegisterUserService_    *use_case.RegisterUserService
-	AuthUserService_        *use_case.AuthUserService
-	GetOrdersService_       *use_case.GetOrdersService
-	GetUserBalanceService_  *use_case.GetUserBalanceService
-	GetWithdrawalsService_  *use_case.GetWithdrawalsService
-	CreateOrderService_     *use_case.CreateOrderService
-	LoadOrderService_       *use_case.LoadOrderService
-	WithdrawRequestService_ *use_case.WithdrawRequestService
+	RegisterUserHandler_    *usecase.RegisterUserHandler
+	AuthUserHandler_        *usecase.AuthUserHandler
+	GetOrdersHandler_       *usecase.GetOrdersHandler
+	GetUserBalanceHandler_  *usecase.GetUserBalanceHandler
+	GetWithdrawalsHandler_  *usecase.GetWithdrawalsHandler
+	CreateOrderHandler_     *usecase.CreateOrderHandler
+	LoadOrderHandler_       *usecase.LoadOrderHandler
+	WithdrawRequestHandler_ *usecase.WithdrawRequestHandler
 }
 
 func NewContainer(conf *config.ServerConf) *Container {
@@ -123,49 +123,49 @@ func (c *Container) WithdrawalRepository() repositories.WithdrawalRepository {
 	return c.WithdrawalRepository_
 }
 
-func (c *Container) RegisterUserService() *use_case.RegisterUserService {
-	if c.RegisterUserService_ == nil {
-		c.RegisterUserService_ = use_case.NewRegisterUserService(c.UserRepository(), c.UserBalanceRepository())
+func (c *Container) RegisterUserHandler() *usecase.RegisterUserHandler {
+	if c.RegisterUserHandler_ == nil {
+		c.RegisterUserHandler_ = usecase.NewRegisterUserHandler(c.UserRepository(), c.UserBalanceRepository())
 	}
 
-	return c.RegisterUserService_
+	return c.RegisterUserHandler_
 }
 
-func (c *Container) AuthUserService() *use_case.AuthUserService {
-	if c.AuthUserService_ == nil {
-		c.AuthUserService_ = use_case.NewAuthService(c.UserRepository())
+func (c *Container) AuthUserHandler() *usecase.AuthUserHandler {
+	if c.AuthUserHandler_ == nil {
+		c.AuthUserHandler_ = usecase.NewAuthHandler(c.UserRepository())
 	}
 
-	return c.AuthUserService_
+	return c.AuthUserHandler_
 }
 
-func (c *Container) GetOrdersService() *use_case.GetOrdersService {
-	if c.GetOrdersService_ == nil {
-		c.GetOrdersService_ = use_case.NewGetOrdersService(c.UserRepository(), c.OrderRepository())
+func (c *Container) GetOrdersHandler() *usecase.GetOrdersHandler {
+	if c.GetOrdersHandler_ == nil {
+		c.GetOrdersHandler_ = usecase.NewGetOrdersHandler(c.UserRepository(), c.OrderRepository())
 	}
 
-	return c.GetOrdersService_
+	return c.GetOrdersHandler_
 }
 
-func (c *Container) GetUserBalanceService() *use_case.GetUserBalanceService {
-	if c.GetUserBalanceService_ == nil {
-		c.GetUserBalanceService_ = use_case.NewGetUserBalanceService(c.UserRepository(), c.UserBalanceRepository())
+func (c *Container) GetUserBalanceHandler() *usecase.GetUserBalanceHandler {
+	if c.GetUserBalanceHandler_ == nil {
+		c.GetUserBalanceHandler_ = usecase.NewGetUserBalanceHandler(c.UserRepository(), c.UserBalanceRepository())
 	}
 
-	return c.GetUserBalanceService_
+	return c.GetUserBalanceHandler_
 }
 
-func (c *Container) GetWithdrawalsService() *use_case.GetWithdrawalsService {
-	if c.GetWithdrawalsService_ == nil {
-		c.GetWithdrawalsService_ = use_case.NewGetWithdrawalsService(c.UserRepository(), c.WithdrawalRepository())
+func (c *Container) GetWithdrawalsHandler() *usecase.GetWithdrawalsHandler {
+	if c.GetWithdrawalsHandler_ == nil {
+		c.GetWithdrawalsHandler_ = usecase.NewGetWithdrawalsHandler(c.UserRepository(), c.WithdrawalRepository())
 	}
 
-	return c.GetWithdrawalsService_
+	return c.GetWithdrawalsHandler_
 }
 
-func (c *Container) CreateOrderService() *use_case.CreateOrderService {
-	if c.CreateOrderService_ == nil {
-		c.CreateOrderService_ = use_case.NewCreateOrderService(
+func (c *Container) CreateOrderHandler() *usecase.CreateOrderHandler {
+	if c.CreateOrderHandler_ == nil {
+		c.CreateOrderHandler_ = usecase.NewCreateOrderHandler(
 			c.Logger(),
 			c.UserRepository(),
 			c.OrderRepository(),
@@ -174,23 +174,23 @@ func (c *Container) CreateOrderService() *use_case.CreateOrderService {
 		)
 	}
 
-	return c.CreateOrderService_
+	return c.CreateOrderHandler_
 }
 
-func (c *Container) LoadOrderService() *use_case.LoadOrderService {
-	if c.LoadOrderService_ == nil {
-		c.LoadOrderService_ = use_case.NewLoadOrderService(
+func (c *Container) LoadOrderHandler() *usecase.LoadOrderHandler {
+	if c.LoadOrderHandler_ == nil {
+		c.LoadOrderHandler_ = usecase.NewLoadOrderHandler(
 			c.conf.AccrualSystemAddress,
 			c.Logger(),
 		)
 	}
 
-	return c.LoadOrderService_
+	return c.LoadOrderHandler_
 }
 
-func (c *Container) WithdrawRequestService() *use_case.WithdrawRequestService {
-	if c.WithdrawRequestService_ == nil {
-		c.WithdrawRequestService_ = use_case.NewWithdrawRequestService(
+func (c *Container) WithdrawRequestHandler() *usecase.WithdrawRequestHandler {
+	if c.WithdrawRequestHandler_ == nil {
+		c.WithdrawRequestHandler_ = usecase.NewWithdrawRequestHandler(
 			c.Logger(),
 			c.UserRepository(),
 			c.UserBalanceRepository(),
@@ -199,5 +199,5 @@ func (c *Container) WithdrawRequestService() *use_case.WithdrawRequestService {
 		)
 	}
 
-	return c.WithdrawRequestService_
+	return c.WithdrawRequestHandler_
 }

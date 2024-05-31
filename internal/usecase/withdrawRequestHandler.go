@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 
 const NotEnoughPoints = "NotEnoughPoints"
 
-type WithdrawRequestService struct {
+type WithdrawRequestHandler struct {
 	Logger                *zap.Logger
 	UserRepository        repositories.UserRepository
 	UserBalanceRepository repositories.UserBalanceRepository
@@ -20,14 +20,14 @@ type WithdrawRequestService struct {
 	WithdrawalRepository  repositories.WithdrawalRepository
 }
 
-func NewWithdrawRequestService(
+func NewWithdrawRequestHandler(
 	logger *zap.Logger,
 	userRepository repositories.UserRepository,
 	userBalanceRepository repositories.UserBalanceRepository,
 	orderRepository repositories.OrderRepository,
 	withdrawalRepository repositories.WithdrawalRepository,
-) *WithdrawRequestService {
-	return &WithdrawRequestService{
+) *WithdrawRequestHandler {
+	return &WithdrawRequestHandler{
 		Logger:                logger,
 		UserRepository:        userRepository,
 		UserBalanceRepository: userBalanceRepository,
@@ -36,7 +36,7 @@ func NewWithdrawRequestService(
 	}
 }
 
-func (s *WithdrawRequestService) Handle(
+func (s *WithdrawRequestHandler) Handle(
 	ctx context.Context,
 	userID int64,
 	orderNumber string,

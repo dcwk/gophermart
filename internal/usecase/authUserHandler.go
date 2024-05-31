@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -8,17 +8,17 @@ import (
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
-type AuthUserService struct {
+type AuthUserHandler struct {
 	UserRepository repositories.UserRepository
 }
 
-func NewAuthService(userRepository repositories.UserRepository) *AuthUserService {
-	return &AuthUserService{
+func NewAuthHandler(userRepository repositories.UserRepository) *AuthUserHandler {
+	return &AuthUserHandler{
 		UserRepository: userRepository,
 	}
 }
 
-func (s *AuthUserService) Handle(ctx context.Context, login string, password string) (string, error) {
+func (s *AuthUserHandler) Handle(ctx context.Context, login string, password string) (string, error) {
 	currentUser, err := s.UserRepository.GetUserByLogin(ctx, login)
 	if err != nil || currentUser.ID == 0 {
 		return "", fmt.Errorf("failed to find user by login: %w", err)

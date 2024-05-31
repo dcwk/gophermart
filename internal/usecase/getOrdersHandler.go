@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -8,22 +8,22 @@ import (
 	"github.com/dcwk/gophermart/internal/repositories"
 )
 
-type GetOrdersService struct {
+type GetOrdersHandler struct {
 	UserRepository  repositories.UserRepository
 	OrderRepository repositories.OrderRepository
 }
 
-func NewGetOrdersService(
+func NewGetOrdersHandler(
 	userRepository repositories.UserRepository,
 	orderRepository repositories.OrderRepository,
-) *GetOrdersService {
-	return &GetOrdersService{
+) *GetOrdersHandler {
+	return &GetOrdersHandler{
 		UserRepository:  userRepository,
 		OrderRepository: orderRepository,
 	}
 }
 
-func (s *GetOrdersService) Handle(ctx context.Context, userID int64) ([]*models.Order, error) {
+func (s *GetOrdersHandler) Handle(ctx context.Context, userID int64) ([]*models.Order, error) {
 	user, err := s.UserRepository.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("user %d not found", userID)

@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"testing"
@@ -9,14 +9,16 @@ import (
 )
 
 type suite struct {
-	UserRepository  *mock_repositories.MockUserRepository
-	OrderRepository *mock_repositories.MockOrderRepository
+	UserRepository        *mock_repositories.MockUserRepository
+	UserBalanceRepository *mock_repositories.MockUserBalanceRepository
+	OrderRepository       *mock_repositories.MockOrderRepository
 }
 
 func defaultSuite(t *testing.T) *suite {
 	ctrl := gomock.NewController(t)
 	s := suite{}
 	s.UserRepository = mock_repositories.NewMockUserRepository(ctrl)
+	s.UserBalanceRepository = mock_repositories.NewMockUserBalanceRepository(ctrl)
 	s.OrderRepository = mock_repositories.NewMockOrderRepository(ctrl)
 
 	return &s

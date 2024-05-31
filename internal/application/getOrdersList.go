@@ -18,7 +18,7 @@ type orderResponse struct {
 func (app *Application) GetOrdersList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	userID := auth.GetUserIDFromCtx(r.Context())
-	orders, err := app.Container.GetOrdersService().Handle(
+	orders, err := app.Container.GetOrdersHandler().Handle(
 		r.Context(),
 		userID,
 	)

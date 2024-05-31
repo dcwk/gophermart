@@ -15,7 +15,7 @@ type UserBalanceResponse struct {
 func (app *Application) GetUserBalance(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	userID := auth.GetUserIDFromCtx(r.Context())
-	userBalance, err := app.Container.GetUserBalanceService().Handle(
+	userBalance, err := app.Container.GetUserBalanceHandler().Handle(
 		r.Context(),
 		userID,
 	)

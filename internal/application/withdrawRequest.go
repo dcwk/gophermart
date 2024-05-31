@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/dcwk/gophermart/internal/use_case"
+	"github.com/dcwk/gophermart/internal/usecase"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
@@ -24,7 +24,7 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 	}
 
 	userID := auth.GetUserIDFromCtx(r.Context())
-	code, err := app.Container.WithdrawRequestService().Handle(
+	code, err := app.Container.WithdrawRequestHandler().Handle(
 		r.Context(),
 		userID,
 		request.OrderNumber,
@@ -36,13 +36,13 @@ func (app *Application) WithdrawRequest(w http.ResponseWriter, r *http.Request) 
 	}
 
 	switch code {
-	case use_case.NotEnoughPoints:
+	case usecase.NotEnoughPoints:
 		w.WriteHeader(http.StatusPaymentRequired)
-	case use_case.NotFound:
+	case usecase.NotFound:
 		w.WriteHeader(http.StatusNotFound)
-	case use_case.ForbiddenOrder:
+	case usecase.ForbiddenOrder:
 		w.WriteHeader(http.StatusConflict)
-	case use_case.IncorrectOrderNumber:
+	case usecase.IncorrectOrderNumber:
 		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
 		if err != nil {

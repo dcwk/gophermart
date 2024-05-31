@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -9,22 +9,22 @@ import (
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
-type RegisterUserService struct {
+type RegisterUserHandler struct {
 	UserRepository        repositories.UserRepository
 	UserBalanceRepository repositories.UserBalanceRepository
 }
 
-func NewRegisterUserService(
+func NewRegisterUserHandler(
 	userRepository repositories.UserRepository,
 	userBalanceRepository repositories.UserBalanceRepository,
-) *RegisterUserService {
-	return &RegisterUserService{
+) *RegisterUserHandler {
+	return &RegisterUserHandler{
 		UserRepository:        userRepository,
 		UserBalanceRepository: userBalanceRepository,
 	}
 }
 
-func (s *RegisterUserService) Handle(ctx context.Context, login string, password string) (string, error) {
+func (s *RegisterUserHandler) Handle(ctx context.Context, login string, password string) (string, error) {
 	_, err := s.UserRepository.GetUserByLogin(ctx, login)
 	if err == nil {
 		return "", fmt.Errorf("user with login %s already exists", login)

@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
-func TestAuthUserService_Handle(t *testing.T) {
+func TestAuthUserHandler_Handle(t *testing.T) {
 	tests := []struct {
 		Name     string
 		Login    string
@@ -76,7 +76,7 @@ func TestAuthUserService_Handle(t *testing.T) {
 				assert.NoError(t, err)
 			}
 			userRepository.EXPECT().GetUserByLogin(gomock.Any(), gomock.Any()).Return(test.MockUser, test.MockErr)
-			service := NewAuthService(userRepository)
+			service := NewAuthHandler(userRepository)
 
 			token, err := service.Handle(context.Background(), test.Login, test.Password)
 

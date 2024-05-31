@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -57,7 +57,7 @@ func TestGetOrdersService_Handle(t *testing.T) {
 			s := defaultSuite(t)
 			test.PrepareMocks(s)
 
-			service := NewGetOrdersService(
+			service := NewGetOrdersHandler(
 				s.UserRepository,
 				s.OrderRepository,
 			)

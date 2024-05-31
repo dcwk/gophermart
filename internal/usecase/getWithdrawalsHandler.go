@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -8,22 +8,22 @@ import (
 	"github.com/dcwk/gophermart/internal/repositories"
 )
 
-type GetWithdrawalsService struct {
+type GetWithdrawalsHandler struct {
 	UserRepository       repositories.UserRepository
 	WithdrawalRepository repositories.WithdrawalRepository
 }
 
-func NewGetWithdrawalsService(
+func NewGetWithdrawalsHandler(
 	userRepository repositories.UserRepository,
 	WithdrawalRepository repositories.WithdrawalRepository,
-) *GetWithdrawalsService {
-	return &GetWithdrawalsService{
+) *GetWithdrawalsHandler {
+	return &GetWithdrawalsHandler{
 		UserRepository:       userRepository,
 		WithdrawalRepository: WithdrawalRepository,
 	}
 }
 
-func (s *GetWithdrawalsService) Handle(ctx context.Context, userID int64) ([]*models.Withdrawal, error) {
+func (s *GetWithdrawalsHandler) Handle(ctx context.Context, userID int64) ([]*models.Withdrawal, error) {
 	user, err := s.UserRepository.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("user %d not found", userID)

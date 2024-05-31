@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -12,19 +12,19 @@ import (
 	"github.com/dcwk/gophermart/internal/models"
 )
 
-type LoadOrderService struct {
+type LoadOrderHandler struct {
 	AccrualSystemAddress string
 	Logger               *zap.Logger
 }
 
-func NewLoadOrderService(accrualSystemAddress string, logger *zap.Logger) *LoadOrderService {
-	return &LoadOrderService{
+func NewLoadOrderHandler(accrualSystemAddress string, logger *zap.Logger) *LoadOrderHandler {
+	return &LoadOrderHandler{
 		AccrualSystemAddress: accrualSystemAddress,
 		Logger:               logger,
 	}
 }
 
-func (s *LoadOrderService) Handle(ctx context.Context, orderChannel chan models.AccrualOrder, orderNumber string) {
+func (s *LoadOrderHandler) Handle(ctx context.Context, orderChannel chan models.AccrualOrder, orderNumber string) {
 	path := fmt.Sprintf("%s/api/orders/%s", s.AccrualSystemAddress, orderNumber)
 	var accrualOrder models.AccrualOrder
 

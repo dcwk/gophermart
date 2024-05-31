@@ -17,7 +17,7 @@ type withdrawResponse struct {
 func (app *Application) GetWithdrawalsList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
 	userID := auth.GetUserIDFromCtx(r.Context())
-	withdrawals, err := app.Container.GetWithdrawalsService().Handle(
+	withdrawals, err := app.Container.GetWithdrawalsHandler().Handle(
 		r.Context(),
 		userID,
 	)

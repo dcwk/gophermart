@@ -19,7 +19,7 @@ func (app *Application) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := app.Container.RegisterUserService().Handle(
+	token, err := app.Container.RegisterUserHandler().Handle(
 		r.Context(),
 		request.Login,
 		request.Password,

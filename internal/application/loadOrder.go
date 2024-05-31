@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/dcwk/gophermart/internal/models"
-	"github.com/dcwk/gophermart/internal/use_case"
+	"github.com/dcwk/gophermart/internal/usecase"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
@@ -22,9 +22,9 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	userID := auth.GetUserIDFromCtx(r.Context())
 
-	go app.Container.LoadOrderService().Handle(r.Context(), orderChannel, string(orderNumber))
+	go app.Container.LoadOrderHandler().Handle(r.Context(), orderChannel, string(orderNumber))
 	go func() {
-		code, err := app.Container.CreateOrderService().Handle(r.Context(), orderChannel, string(orderNumber), userID)
+		code, err := app.Container.CreateOrderHandler().Handle(r.Context(), orderChannel, string(orderNumber), userID)
 		resChannel <- code
 		errChannel <- err
 	}()
@@ -40,13 +40,13 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch code {
-	case use_case.InvalidOrder:
+	case usecase.InvalidOrder:
 		w.WriteHeader(http.StatusAccepted)
-	case use_case.OrderAlreadyExists:
+	case usecase.OrderAlreadyExists:
 		w.WriteHeader(http.StatusOK)
-	case use_case.ForbiddenOrder:
+	case usecase.ForbiddenOrder:
 		w.WriteHeader(http.StatusConflict)
-	case use_case.IncorrectOrderNumber:
+	case usecase.IncorrectOrderNumber:
 		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)

@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -19,7 +19,7 @@ const (
 	InvalidOrder         = "InvalidOrder"
 )
 
-type CreateOrderService struct {
+type CreateOrderHandler struct {
 	Logger                *zap.Logger
 	UserRepository        repositories.UserRepository
 	OrderRepository       repositories.OrderRepository
@@ -27,14 +27,14 @@ type CreateOrderService struct {
 	UserBalanceRepository repositories.UserBalanceRepository
 }
 
-func NewCreateOrderService(
+func NewCreateOrderHandler(
 	logger *zap.Logger,
 	userRepository repositories.UserRepository,
 	orderRepository repositories.OrderRepository,
 	accrualRepository repositories.AccrualRepository,
 	userBalanceRepository repositories.UserBalanceRepository,
-) *CreateOrderService {
-	return &CreateOrderService{
+) *CreateOrderHandler {
+	return &CreateOrderHandler{
 		Logger:                logger,
 		UserRepository:        userRepository,
 		OrderRepository:       orderRepository,
@@ -43,7 +43,7 @@ func NewCreateOrderService(
 	}
 }
 
-func (s *CreateOrderService) Handle(
+func (s *CreateOrderHandler) Handle(
 	ctx context.Context,
 	orderChannel <-chan models.AccrualOrder,
 	orderNumber string,

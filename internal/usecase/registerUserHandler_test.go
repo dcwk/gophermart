@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"context"
@@ -58,7 +58,7 @@ func TestRegisterUserService_Handle(t *testing.T) {
 			userBalanceRepository.EXPECT().
 				Create(gomock.Any(), gomock.Any()).
 				Return(nil, test.MockUBErr)
-			service := NewRegisterUserService(userRepository, userBalanceRepository)
+			service := NewRegisterUserHandler(userRepository, userBalanceRepository)
 
 			token, err := service.Handle(context.Background(), test.Login, test.Password)
 
