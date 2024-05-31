@@ -62,6 +62,7 @@ func (c *Container) DB() *pgxpool.Pool {
 }
 
 func (c *Container) Logger() *zap.Logger {
+
 	if c.Logger_ == nil {
 		lvl, err := zap.ParseAtomicLevel(c.conf.LogLevel)
 		if err != nil {
