@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/dcwk/gophermart/internal/models"
-	"github.com/dcwk/gophermart/internal/services"
+	"github.com/dcwk/gophermart/internal/use_case"
 	"github.com/dcwk/gophermart/internal/utils/auth"
 )
 
@@ -40,13 +40,13 @@ func (app *Application) LoadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch code {
-	case services.InvalidOrder:
+	case use_case.InvalidOrder:
 		w.WriteHeader(http.StatusAccepted)
-	case services.OrderAlreadyExists:
+	case use_case.OrderAlreadyExists:
 		w.WriteHeader(http.StatusOK)
-	case services.ForbiddenOrder:
+	case use_case.ForbiddenOrder:
 		w.WriteHeader(http.StatusConflict)
-	case services.IncorrectOrderNumber:
+	case use_case.IncorrectOrderNumber:
 		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)

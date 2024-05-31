@@ -1,15 +1,16 @@
-package services
+package use_case
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/dcwk/gophermart/internal/models"
 	mock_repositories "github.com/dcwk/gophermart/internal/repositories/mocks"
 	"github.com/dcwk/gophermart/internal/utils/auth"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterUserService_Handle(t *testing.T) {

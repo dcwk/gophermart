@@ -1,4 +1,4 @@
-package services
+package use_case
 
 import (
 	"context"
@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dcwk/gophermart/internal/models"
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
+
+	"github.com/dcwk/gophermart/internal/models"
 )
 
 type LoadOrderService struct {

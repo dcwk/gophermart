@@ -1,12 +1,13 @@
-package services
+package use_case
 
 import (
 	"context"
 	"fmt"
 
+	"go.uber.org/zap"
+
 	"github.com/dcwk/gophermart/internal/models"
 	"github.com/dcwk/gophermart/internal/repositories"
-	"go.uber.org/zap"
 )
 
 const NotEnoughPoints = "NotEnoughPoints"
