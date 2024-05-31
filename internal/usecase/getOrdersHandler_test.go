@@ -57,18 +57,18 @@ func TestGetOrdersService_Handle(t *testing.T) {
 			s := defaultSuite(t)
 			test.PrepareMocks(s)
 
-			service := NewGetOrdersHandler(
+			handler := NewGetOrdersHandler(
 				s.UserRepository,
 				s.OrderRepository,
 			)
 
-			res, err := service.Handle(context.Background(), 1)
+			res, err := handler.Handle(context.Background(), 1)
 			if err != nil {
 				require.Error(t, test.Err, err)
+			} else {
+				require.Equal(t, test.Want, res)
+				require.NoError(t, err)
 			}
-
-			require.Equal(t, test.Want, res)
-			require.NoError(t, err)
 		})
 	}
 }
