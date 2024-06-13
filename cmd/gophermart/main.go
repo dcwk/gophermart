@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 
+	"github.com/dcwk/gophermart/internal/application"
 	"github.com/dcwk/gophermart/internal/config"
-	"github.com/dcwk/gophermart/internal/server"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func main() {
@@ -13,5 +14,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server.Run(conf)
+	application.Run(conf)
 }
