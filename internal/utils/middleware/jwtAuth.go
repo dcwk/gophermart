@@ -11,8 +11,8 @@ import (
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := getTokenFromRequest(r)
-		userID := auth.GetUserID(token)
-		if userID <= 0 {
+		userID, err := auth.GetUserID(token)
+		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

@@ -66,6 +66,7 @@ func TestAuthUserHandler_Handle(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			var err error
+
 			assert.NoError(t, err)
 
 			ctrl := gomock.NewController(t)
@@ -79,12 +80,13 @@ func TestAuthUserHandler_Handle(t *testing.T) {
 			service := NewAuthHandler(userRepository)
 
 			token, err := service.Handle(context.Background(), test.Login, test.Password)
+			userID, _ := auth.GetUserID(token)
 
 			if test.Err != nil {
 				assert.Error(t, test.Err, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, test.Want, auth.GetUserID(token))
+				assert.Equal(t, test.Want, userID)
 			}
 		})
 	}

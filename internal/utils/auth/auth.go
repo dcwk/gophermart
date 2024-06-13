@@ -37,7 +37,7 @@ func BuildJWTString(userID int64) (string, error) {
 	return tokenString, nil
 }
 
-func GetUserID(tokenString string) int64 {
+func GetUserID(tokenString string) (int64, error) {
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims,
 		func(t *jwt.Token) (interface{}, error) {
@@ -47,16 +47,16 @@ func GetUserID(tokenString string) int64 {
 			return []byte(SecretKey), nil
 		})
 	if err != nil {
-		return -1
+		return 0, fmt.Errorf("failed to parse token: %v", err)
 	}
 
 	if !token.Valid {
 		fmt.Println("Token is not valid")
-		return -1
+		return 0, fmt.Errorf("invalid token")
 	}
 
 	fmt.Println("Token os valid")
-	return claims.UserID
+	return claims.UserID, nil
 }
 
 func GetUserIDFromCtx(ctx context.Context) int64 {

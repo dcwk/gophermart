@@ -61,12 +61,12 @@ func TestRegisterUserService_Handle(t *testing.T) {
 			service := NewRegisterUserHandler(userRepository, userBalanceRepository)
 
 			token, err := service.Handle(context.Background(), test.Login, test.Password)
-
+			userID, _ := auth.GetUserID(token)
 			if test.Err != nil {
 				assert.Equal(t, test.Err, err)
 			}
 
-			assert.Equal(t, test.Want, auth.GetUserID(token))
+			assert.Equal(t, test.Want, userID)
 			assert.NoError(t, err)
 		})
 	}
