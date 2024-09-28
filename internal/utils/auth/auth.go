@@ -15,10 +15,8 @@ type Claims struct {
 
 type UserIDKey string
 
-// TODO: добавить возможность управлять протуханием из конфига
 const TokenExp = time.Hour * 3
 
-// TODO: убрать ключ в конфиг
 const SecretKey = "supersecretkey"
 
 func BuildJWTString(userID int64) (string, error) {
